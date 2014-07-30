@@ -24,7 +24,7 @@
 
 
 /* >>>>>>>>>>>>>>>>>>>>>>>>>> FILE ERRORS >>>>>>>>>>>>>>>>>>>>>>>>>> */
-#define NO_FILES                    "Error: You have to add an input \'.as\' files to the command line\n"
+#define NO_FILES                    "Error: You have to add an input \'.as\' files as an arguments\n"
 #define FILE_ERROR                  "Error: Can't find file %s\n"
 
 
