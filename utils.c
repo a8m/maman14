@@ -1,8 +1,16 @@
-
 /*
-Purpose: convert number in base 10 to number in base 8
-Parameters: number type of int
-return value: number in base 8 
+ * =========================================================================================
+ * name        : maman_14/utils.h
+ * author      : Ariel Mashraki, Osnat Izic
+ * email       :
+ * description :
+ * =========================================================================================
+ */
+
+/**
+ * Convert number in base 10 to number in base 8
+ * @param  number type of int
+ * @return number in base 8
  */
 int DecToBase8(int num)
 {
