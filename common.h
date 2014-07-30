@@ -1,13 +1,31 @@
-//
-//  common.h
-//  maman14
-//
-//  Created by Ariel Mashraki on 7/28/14.
-//  Copyright (c) 2014 Ariel Mashraki. All rights reserved.
-//
+/*
+ * =========================================================================================
+ * name        : maman_14/common.h
+ * author      : Ariel Mashraki, Osnat Izic
+ * email       :
+ * description :
+ * =========================================================================================
+ */
 
-#ifndef maman14_common_h
-#define maman14_common_h
+#ifndef COMMON_H_
+#define COMMON_H_
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>> GLOBAL DEFINE >>>>>>>>>>>>>>>>>>>>>>>>> */
+#define EXIT                        1
+#define TRUE                        1
+#define FALSE                       0
+#define MAX_FILE_NAME               20
+
+
+
+/* >>>>>>>>>>>>>>>>>>>>>>>>>> FILE ERRORS >>>>>>>>>>>>>>>>>>>>>>>>>> */
+#define NO_FILES                    "Error: You have to add an input \'.as\' files to the command line\n"
+#define FILE_ERROR                  "Error: Can't find file %s\n"
 
 
 
