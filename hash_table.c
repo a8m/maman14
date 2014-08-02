@@ -1,3 +1,4 @@
+
 #include "hashtable.h"
 #include <stdlib.h>
 #include <string.h>
@@ -46,3 +47,12 @@ hash_node *insert(char *s, int def ,hash_node *hashtab)
 
  }
 
+
+/*
+ * =========================================================================================
+ * name        : maman_14/hash_table.c
+ * author      : Ariel Mashraki, Osnat Izic
+ * email       :
+ * description :
+ * =========================================================================================
+ */
