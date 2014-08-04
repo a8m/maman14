@@ -20,7 +20,7 @@ hash_node *lookup(char *s, hash_node *hashtab)
 /*insert: insert node to the list */
 
 
-hash_node *insert(char *s, int def ,hash_node *hashtab)
+/*hash_node *insert(char *s, int def ,hash_node *hashtab)
 {
 	 if(lookup(s,hashtab) == NULL){
 		hash_node *np = (hash_node*) malloc(sizeof(hash_node));
@@ -34,17 +34,9 @@ hash_node *insert(char *s, int def ,hash_node *hashtab)
 		np->next = NULL;
 		
 	 	}
-	/*
-	else
-	{
-	eror massege (?)
-	}
-*/
+    return np;
 
-
-
-
- }
+ }*/
 
 
 /*

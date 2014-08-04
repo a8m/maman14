@@ -10,6 +10,7 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
+#include "parser.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -20,7 +21,8 @@
 #define TRUE                        1
 #define FALSE                       0
 #define MAX_FILE_NAME               20
-
+#define MAX_LINE_LENGTH             80
+#define MAX_LINES                   100
 
 
 /* >>>>>>>>>>>>>>>>>>>>>>>>>> FILE ERRORS >>>>>>>>>>>>>>>>>>>>>>>>>> */

@@ -5,13 +5,23 @@
 
 /* >>>>>>>>>>>>>>>>>>>>>> INSTRUCTION BIT WIDTH >>>>>>>>>>>>>>>>>>>> */
 #define COMB_WIDTH 2
-#define DREG_WIDTH 3    /*destination register*/
-#define DADDR_WIDTH 2   /*destination address*/
-#define SREG_WIDTH 3    /*source register*/
-#define SADDR_WIDTH 2   /*source address*/
+#define DREG_WIDTH 3        /*destination register*/
+#define DADDR_WIDTH 2       /*destination address*/
+#define SREG_WIDTH 3        /*source register*/
+#define SADDR_WIDTH 2       /*source address*/
 #define OPCODE_WIDTH 4
 #define TYPE_WIDTH 1
 #define RSVD_WIDTH 3
+
+/* >>>>>>>>>>>>>>>>>>>>>> INSTRUCTION BIT OFFSET >>>>>>>>>>>>>>>>>>>> */
+#define COMB_OFFSET 0
+#define DREG_OFFSET 2       /*destination register*/
+#define DADDR_OFFSET 5      /*destination address*/
+#define SREG_OFFSET 7       /*source register*/
+#define SADDR_OFFSET 10     /*source address*/
+#define OPCODE_OFFSET 12
+#define TYPE_OFFSET 16
+#define RSVD_OFFSET 17
 
 /* >>>>>>>>>>>>>>> INSTRUCTION LINE (USING BIT FIELDS) >>>>>>>>>>>>> */
 typedef struct instrline {
