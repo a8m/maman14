@@ -17,13 +17,13 @@ hash_node *lookup(char *s, hash_node *hashtab)
     
     
     
-/*insert: insert node to the list */
+/*insert: insert node to the list*/
+hash_node *insert(char *s, int def ,hash_node *hashtab){
 
-
-/*hash_node *insert(char *s, int def ,hash_node *hashtab)
-{
-	 if(lookup(s,hashtab) == NULL){
-		hash_node *np = (hash_node*) malloc(sizeof(hash_node));
+	hash_node *np = lookup(s,hashtab);
+	
+		 if(np == NULL){
+			hash_node *np = (hash_node*) malloc(sizeof(hash_node));
 
 		while(np->next){
 			np = np->next;
@@ -36,11 +36,11 @@ hash_node *lookup(char *s, hash_node *hashtab)
 	 	}
     return np;
 
- }*/
+}
+/* else - if already exist?*/
 
 
-/*
- * =========================================================================================
+/* =========================================================================================
  * name        : maman_14/hash_table.c
  * author      : Ariel Mashraki, Osnat Izic
  * email       :
