@@ -44,7 +44,7 @@ int main(int argc, char **argv)
         file_lines[count].line = malloc(sizeof(char) * MAX_LINE_LENGTH);
 		/* read the file into the array */
         
-        printf("success %s", file_name);
+        printf("success %s.", file_name);
     }
     
     
