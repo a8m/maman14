@@ -45,8 +45,10 @@ int main(int argc, char **argv)
 		/* read the file into the array */
         while (fgets(file_lines[count].line, MAX_LINE_LENGTH, fp)) {
             
-            printf("line: %s\n",file_lines[count].line);
+            file_lines[count].line_number = count + 1;
+            printf("line %d: %s",file_lines[count].line_number,file_lines[count].line);
             
+            file_lines[++count].line = malloc(sizeof(char) * (MAX_LINE_LENGTH));
         } /* END: read current line */
         
     }/* END: read argc */
