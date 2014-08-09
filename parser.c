@@ -7,9 +7,9 @@
  * =========================================================================================
  */
 
+#include "common.h"
 #include "parser.h"
 #include "hash_table.h"
-#include "common.h"
 
 /* temporary node for lookuping in the linked list */
 hash_node *temp;
@@ -51,13 +51,24 @@ int firstParsing(code_line *file, int num_of_lines)
     int i = -1;
     
     while (++i < num_of_lines) {
+        symbol = getSymbol(file + i);
+        trimSpaces(&(file[i].line));
         
+        /* if it's operation instruction[extern, entry, data, string]*/
+        if(file[i].line[0] == '.')
+            printf("line with OP : %s\n",file[i].line);
+        else {
+            /*insert symbol to hash table*/
+            if (symbol)
+                printf("symbol: %s\n", symbol);
+            /*parse instruction */
+        }
     }
     
     return 0;
 }
 
-
+/* get symbol/label */
 char *getSymbol(code_line *c_line)
 {
     char *temp = (c_line->line);

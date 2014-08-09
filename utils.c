@@ -7,11 +7,8 @@
  * =========================================================================================
  */
 
-/**
- * Convert number in base 10 to number in base 8
- * @param  number type of int
- * @return number in base 8
- */
+#include "common.h"
+
 int DecToBase8(int num)
 {
 	int outputBase = 8;
@@ -28,3 +25,8 @@ int DecToBase8(int num)
 	return base8_num;
 }
 
+void trimSpaces(char **str)
+{
+    while(isspace(**str) && (**str != '\n'))
+        (*str)++;
+}
