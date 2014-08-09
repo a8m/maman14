@@ -31,3 +31,5 @@ typedef struct node {
     char *name; /* defined name */
     int *defn; /* decimal adress */
 } hash_node;
+
+hash_node *lookup(char *s, hash_node *hashtab);

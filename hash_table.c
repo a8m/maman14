@@ -1,8 +1,6 @@
 
-#include "hash_table.h"
 #include "common.h"
-
-
+#include "hash_table.h"
 
 /*lookup: look for s in hashtab */
 
@@ -17,7 +15,7 @@ hash_node *lookup(char *s, hash_node *hashtab)
     
     
     
-/*insert: insert node to the list*/
+/*insert: insert node to the list
 hash_node *insert(char *s, int def ,hash_node *hashtab){
 
 	hash_node *np = lookup(s,hashtab);
@@ -36,14 +34,5 @@ hash_node *insert(char *s, int def ,hash_node *hashtab){
 	 	}
     return np;
 
-}
+}*/
 /* else - if already exist?*/
-
-
-/* =========================================================================================
- * name        : maman_14/hash_table.c
- * author      : Ariel Mashraki, Osnat Izic
- * email       :
- * description :
- * =========================================================================================
- */

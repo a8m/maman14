@@ -7,33 +7,16 @@
  * =========================================================================================
  */
 
-
-
-
-
-
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <stdlib.h>
 #include "parser.h"
-#include "hash_table.c"
+#include "hash_table.h"
 #include "common.h"
 
 
 /* temporary node for lookuping in the linked list */
 hash_node *temp;
 
-/* linked list for the opcode replacements */
-static hash_node *optab;
-
-
-
-
-
-
-
-
+/* linked list for the opcode replacements
+static hash_node *optab;*/
 
 
 /* this function is checking if there is a symbol. if yes, its returning a pointer to it, if not, returns null */
@@ -69,7 +52,7 @@ char *check_if_symbol(code_line *c_line)
 
 
 
-/* loading all the opcodes into the hashtable */
+/* loading all the opcodes into the hashtable
     void init_opcode_table()
 {
     temp = insert("mov" , MOV, optab);
@@ -88,4 +71,4 @@ char *check_if_symbol(code_line *c_line)
     temp = insert("jsr" , JSR, optab);
     temp = insert("rts" , RTS, optab);
     temp = insert("stop" , STOP, optab);
-}
+}*/

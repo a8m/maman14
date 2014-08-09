@@ -29,7 +29,7 @@ int main(int argc, char **argv)
         int count = 0;
         
         /*create the string to open the file*/
-        sprintf(file_name, "%s.as", argv[i]);
+        sprintf(file_name, "%s", argv[i]);
         fp = fopen(file_name, "r");
         
         /*if there is any problem with the file*/
@@ -40,12 +40,16 @@ int main(int argc, char **argv)
         
         /* allocate memory for reading the files */
         file_lines =  malloc(sizeof(code_line) * MAX_LINES);
-        
         file_lines[count].line = malloc(sizeof(char) * MAX_LINE_LENGTH);
-		/* read the file into the array */
         
-        printf("success %s.", file_name);
-    }
+		/* read the file into the array */
+        while (fgets(file_lines[count].line, MAX_LINE_LENGTH, fp)) {
+            
+            printf("line: %s\n",file_lines[count].line);
+            
+        } /* END: read current line */
+        
+    }/* END: read argc */
     
     
     
