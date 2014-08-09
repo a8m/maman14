@@ -11,7 +11,6 @@
 #include "hash_table.h"
 #include "common.h"
 
-
 /* temporary node for lookuping in the linked list */
 hash_node *temp;
 
@@ -45,30 +44,56 @@ char *check_if_symbol(code_line *c_line)
     return NULL;
 }
 
-
-
-
-
-
-
-
-/* loading all the opcodes into the hashtable
-    void init_opcode_table()
+/* first parsing */
+int firstParsing(code_line *file, int num_of_lines)
 {
-    temp = insert("mov" , MOV, optab);
-    temp = insert("cmp" , CMP, optab);
-    temp = insert("add" , ADD, optab);
-    temp = insert("sub" , SUB, optab);
-    temp = insert("not" , NOT, optab);
-    temp = insert("clr" , CLR, optab);
-    temp = insert("lea" , LEA, optab);
-    temp = insert("inc" , INC, optab);
-    temp = insert("dec" , DEC, optab);
-    temp = insert("jmp" , JMP, optab);
-    temp = insert("bne" , BNE, optab);
-    temp = insert("red" , RED, optab);
-    temp = insert("prn" , PRN, optab);
-    temp = insert("jsr" , JSR, optab);
-    temp = insert("rts" , RTS, optab);
-    temp = insert("stop" , STOP, optab);
-}*/
+    char *symbol;
+    int i = -1;
+    
+    while (++i < num_of_lines) {
+        
+    }
+    
+    return 0;
+}
+
+
+char *getSymbol(code_line *c_line)
+{
+    char *temp = (c_line->line);
+    /* '\0' = end of string */
+    while (*(c_line->line) != '\0') {
+        
+        /*if there is a ':' it's probably end of symbol*/
+        if(*(c_line->line) == ':') {
+            /* put null char at end of symbol */
+            *((c_line->line)++) = '\0';
+            /* make sure its starts with a char */
+            if (!isalpha(temp[0]))
+            {
+                printf(LABEL_ERR);
+            }
+            return temp;
+        }
+        (c_line->line)++;
+    }
+    /* return line to previous state */
+    c_line->line = temp;
+    return NULL;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

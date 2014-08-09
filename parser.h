@@ -51,6 +51,33 @@ typedef struct cline {
     char done;
 } code_line;
 
+/* >>>>>>>>>>>>>>>>>>>>>>>>> PARSE FUNCTIONS >>>>>>>>>>>>>>>>>>>>>> */
+
+/*
+ * First phase for each line,
+ * find and register symbols, labels, etc..
+ * @param code_line {Array}
+ * @param num_of_lines {Int}
+ * @return int(could be void)
+ */
+int firstParsing(code_line *file, int num_of_lines);
+
+/*
+ * Checks whether code_line have symbol
+ * if there, return pointer to it, else null
+ * @param code_line {String}
+ * @return String/NULL
+ */
+char *getSymbol(code_line *c_line);
+
+
+
+
+
+
+
+
+
 
 
 

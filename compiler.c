@@ -51,6 +51,12 @@ int main(int argc, char **argv)
             file_lines[++count].line = malloc(sizeof(char) * (MAX_LINE_LENGTH));
         } /* END: read current line */
         
+        /*free the extra line */
+        free(file_lines[count].line);
+        
+        /* call the first_parsing function from parse.c */
+        firstParsing(file_lines, count);
+        
     }/* END: read argc */
     
     

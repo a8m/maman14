@@ -28,7 +28,7 @@
 /* >>>>>>>>>>>>>>>>>>>>>>>>>> FILE ERRORS >>>>>>>>>>>>>>>>>>>>>>>>>> */
 #define NO_FILES                    "Error: You have to add an input \'.as\' files as an arguments\n"
 #define FILE_ERROR                  "Error: Can't find file %s\n"
-
+#define LABEL_ERR                   "Error: Labels\Symbols should start with uppercase or lowercase char"
 
 
 #endif
