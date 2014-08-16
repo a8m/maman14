@@ -91,6 +91,17 @@ void parseCommand(code_line *c_line, char *symbol)
 		/* use the auxiliary function to extract the string */
 		extract_string(c_line);
 	}
+    /* if data */
+	else if (strncmp((*c_line).line, ".data", sizeof(".data") - 1) == 0)
+	{
+		if (symbol)
+		{
+			ihn = int_install(symbol, dc, data_symtab);
+		}
+        c_line->line += (sizeof(".data") - 1);
+		/* use the auxilary function to extract the data */
+		extract_data(c_line);
+	}
 
 }
 
@@ -128,6 +139,63 @@ void extract_string(code_line *c_line)
     } 
 }
 
+/* this function extract the data from a data command */
+void extract_data(code_line *c_line)
+{
+    int sign;
+    int sum;
+	char expecting_number = 0;
+	/* while its not end of line */
+    while ((*c_line).line[0] != '\n')
+    {
+		/* remove the spaces from the begining of the line */
+		trimSpaces(&((*c_line).line));
+		/* check sign */
+        if (c_line->line[0] == '-')
+        {
+            sign = -1;
+            (c_line->line)++;
+        }
+		/* make sure its start with digit */
+        if (!isdigit((*c_line).line[0]))
+        {
+            ERROR("Wrong .data format, expecting number", (*c_line).line_number)
+			error_flag = 1;
+        }
+        else
+        {
+            sum = 0;
+            sign = 1;
+            while (isdigit((*c_line).line[0]))
+            {
+                sum *= 10;
+                sum += ((*c_line).line[0]) - '0';
+                (c_line->line)++;
+            }
+			/* add the number to data arr */
+            data_arr[dc++] = num2data(sum * sign);
+        }
+		
+		trimSpaces(&((*c_line).line));
+		/* if there is more numbers */
+        if (c_line->line[0] == ',')
+		{
+			expecting_number = 1;
+			(c_line->line)++;
+		}
+		else
+		{
+			expecting_number = 0;
+		}
+    }
+	/* if the line ended and we still waiting for another number */
+	if (expecting_number == 1)
+	{
+		ERROR("Expecting number after \',\'", (*c_line).line_number)
+		error_flag = 1;
+	}
+    
+}
 
 /* this function is called only in start of day, and loading all the opcodes into the hashtable */
 void init_op_table()

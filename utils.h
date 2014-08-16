@@ -35,4 +35,9 @@ void init_data_line(data_line *dl);
  */
 data_line char2data(char ch);
 
+/* 
+ * Returning data_line containing the int in the argument with the sign bit 
+ */
+data_line num2data(int num);
+
 #endif

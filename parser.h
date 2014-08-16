@@ -92,7 +92,8 @@ void parseCommand(code_line *c_line, char *symbol);
 /* this function extract the string from a string command */
 void extract_string(code_line *c_line);
 
-
+/* this function extract the data from a data command */
+void extract_data(code_line *c_line);
 
 
 

@@ -44,6 +44,29 @@ data_line char2data(char ch)
     return tmp;
 }
 
+/*
+ * The botwise 0x7FFF(hexadecimal) will clear the sign biy of a 16-bit number
+ * when used with bitwise(j &= 0x7FFFF), as illustrate in the truth table
+ */
+data_line num2data(int num)
+{
+    unsigned int bit_mask_19 = 0x7FFFF;
+    data_line tmp;
+    init_data_line(&tmp);
+    
+    if (num >= 0)
+    {
+        tmp.data = num & bit_mask_19;
+    }
+    else
+    {
+		tmp.data = (num * -1) & bit_mask_19;
+		tmp.data = ~(tmp.data);
+		(tmp.data)++;
+    }
+    
+    return tmp;
+}
 
 
 
