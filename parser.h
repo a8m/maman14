@@ -71,8 +71,11 @@ int firstParsing(code_line *file, int num_of_lines);
 char *getSymbol(code_line *c_line);
 
 
-
-
+/*
+ * Parse each command line
+ * extract .string, .data, .extern, .entry
+ */
+void parseCommand(code_line *c_line, char *symbol);
 
 
 
