@@ -24,6 +24,7 @@
 #define MAX_FILE_NAME               20
 #define MAX_LINE_LENGTH             80
 #define MAX_LINES                   100
+#define MAX_ARR_SIZE                1000
 
 
 /* >>>>>>>>>>>>>>>>>>>>>>>>>> FILE ERRORS >>>>>>>>>>>>>>>>>>>>>>>>>> */

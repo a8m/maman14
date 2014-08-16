@@ -16,6 +16,8 @@ int main(int argc, char **argv)
     FILE *fp;
     char file_name[MAX_FILE_NAME];
     
+    init_op_table();
+    
     /* init() ==> run init function() {} */
     
     if (argc == 1) {

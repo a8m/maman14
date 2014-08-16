@@ -25,4 +25,9 @@ int DecToBase8(int num);
 void trimSpaces(char **str);
 
 
+/* 
+ * Returning data_line containing the char in the argument 
+ */
+data_line char2data(char ch);
+
 #endif

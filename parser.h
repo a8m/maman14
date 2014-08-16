@@ -51,6 +51,12 @@ typedef struct cline {
     char done;
 } code_line;
 
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MACRO >>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* 
+ * Macro for error printing
+ */
+#define ERROR(MSG,LINE) fprintf(stderr, "Error in line %d: %s\n", LINE, MSG);
+
 /* >>>>>>>>>>>>>>>>>>>>>>>>> PARSE FUNCTIONS >>>>>>>>>>>>>>>>>>>>>> */
 
 /*
@@ -70,12 +76,27 @@ int firstParsing(code_line *file, int num_of_lines);
  */
 char *getSymbol(code_line *c_line);
 
+/*
+ * called only in start of day, and loading all 
+ * the opcodes into the hashtable
+ */
+void init_op_table();
+
 
 /*
  * Parse each command line
  * extract .string, .data, .extern, .entry
  */
 void parseCommand(code_line *c_line, char *symbol);
+
+/* this function extract the string from a string command */
+void extract_string(code_line *c_line);
+
+
+
+
+
+
 
 
 
