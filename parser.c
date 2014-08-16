@@ -97,7 +97,7 @@ void parseCommand(code_line *c_line, char *symbol)
 /* this function extract the string from a string command */
 void extract_string(code_line *c_line)
 {
-    remove_pre_spaces(&(c_line->line));
+    trimSpaces(&(c_line->line));
 	/* make sure its starts with " */
     if (!(c_line->line[0] == '\"'))
     {
@@ -125,8 +125,7 @@ void extract_string(code_line *c_line)
         ERROR(".string argument must end with \"", (*c_line).line_number)
 		error_flag = 1;
         return;
-    }
-    
+    } 
 }
 
 

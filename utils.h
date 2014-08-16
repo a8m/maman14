@@ -24,9 +24,14 @@ int DecToBase8(int num);
  */
 void trimSpaces(char **str);
 
+/*
+ * After allocating memory,
+ * the data need to be clear from garbage
+ */
+void init_data_line(data_line *dl);
 
 /* 
- * Returning data_line containing the char in the argument 
+ * Returning data_line containing the char in the argument
  */
 data_line char2data(char ch);
 

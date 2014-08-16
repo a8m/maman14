@@ -31,7 +31,11 @@ void trimSpaces(char **str)
         (*str)++;
 }
 
-/* this function returning data_line containing the char in the argument */
+void init_data_line(data_line *dl)
+{
+    dl->data = 0;
+}
+
 data_line char2data(char ch)
 {
     data_line tmp;
@@ -39,3 +43,7 @@ data_line char2data(char ch)
     tmp.data = ch;
     return tmp;
 }
+
+
+
+
