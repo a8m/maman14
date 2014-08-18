@@ -2,6 +2,7 @@
 #include "common.h"
 #include "hash_table.h"
 
+
 /* hash: form hash value for string s */
 unsigned int hash(char *s)
 {

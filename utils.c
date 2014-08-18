@@ -68,5 +68,17 @@ data_line num2data(int num)
     return tmp;
 }
 
+/* duplicate the given string in the argument, returnes the copied data */
+char *strdup(const char *str)
+{
+    int n = strlen(str) + 1;
+    char *dup = malloc(n);
+    if(dup)
+    {
+        strcpy(dup, str);
+    }
+    return dup;
+}
+
 
 

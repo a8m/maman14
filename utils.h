@@ -40,4 +40,7 @@ data_line char2data(char ch);
  */
 data_line num2data(int num);
 
+/* duplicate the given string in the argument, returnes the copied data */
+char *strdup(const char *str);
+
 #endif

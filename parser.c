@@ -11,6 +11,7 @@
 #include "parser.h"
 #include "hash_table.h"
 
+
 /* array to store the data parsed from the code */
 data_line data_arr[MAX_ARR_SIZE];
 /* linked list for the symbols addresses of data pointers */
@@ -23,6 +24,19 @@ int_hash_node *ihn;
 int i, ic, dc;
 /* flags for decide if to create the files */
 char error_flag = 0, extern_flag = 0, entry_flag = 0;
+
+/*-------------------------------*/
+
+/* linked list for the external commands */
+static int_hash_node *exttab[HASHSIZE];
+
+/* array for entries */
+char *entry_arr[MAX_ARR_SIZE];
+
+/* counters for entries end externals */
+int entry_counter, extern_counter;
+
+/*-------------------------------*/
 
 /* first parsing */
 int firstParsing(code_line *file, int num_of_lines)
@@ -76,34 +90,7 @@ char *getSymbol(code_line *c_line)
     return NULL;
 }
 
-/* extract each command line */
-void parseCommand(code_line *c_line, char *symbol)
-{
-    /* if string */
-	if (strncmp(c_line->line, ".string", sizeof(".string") - 1) == 0)
-	{
-		/* if there is a symbol */
-		if (symbol)
-		{
-			ihn = int_install(symbol, dc, data_symtab);
-		}
-        c_line->line += (sizeof(".string") - 1);
-		/* use the auxiliary function to extract the string */
-		extract_string(c_line);
-	}
-    /* if data */
-	else if (strncmp((*c_line).line, ".data", sizeof(".data") - 1) == 0)
-	{
-		if (symbol)
-		{
-			ihn = int_install(symbol, dc, data_symtab);
-		}
-        c_line->line += (sizeof(".data") - 1);
-		/* use the auxilary function to extract the data */
-		extract_data(c_line);
-	}
 
-}
 
 /* this function extract the string from a string command */
 void extract_string(code_line *c_line)
@@ -194,8 +181,108 @@ void extract_data(code_line *c_line)
 		ERROR("Expecting number after \',\'", (*c_line).line_number)
 		error_flag = 1;
 	}
+}	
+	/*----------------------------------------*/
+	
+/* this function extract the entry from a entry command */
+void extract_entry(code_line *c_line)
+{
+	/* skip on tabs and spaces */
+	c_line->line = strtok(c_line->line, " \t\n");
+	/* if there is no entry */
+	if (!c_line->line)
+	{
+        ERROR("No value found after entry command", (*c_line).line_number)
+		error_flag = 1;
+		return;
+	}
+	/* add entry to entries array */
+	entry_arr[entry_counter++] = strdup(c_line->line);
+	c_line->line = strtok(NULL, " \t\n");
+	/* make sure there is no other words */
+	if (c_line->line)
+	{
+        ERROR("Unexpected words in entry command", (*c_line).line_number)
+		error_flag = 1;
+	}
+}
+
+/* this function extract the entry from a entry command */
+void extract_extern(code_line *c_line)
+{
+	/* skip on tabs and spaces */
+	c_line->line = strtok(c_line->line, " \t\n");
+	/* if there is no extern */
+	if (!c_line->line)
+	{
+        ERROR("No value found after extern command", (*c_line).line_number)
+		error_flag = 1;
+		return;
+	}
+	/* add to the extern hashtable with value 0 */
+    int_install(c_line->line, '0', exttab);
+	extern_counter++;
+	c_line->line = strtok(NULL, " \t\n");
+	/* make sure there is no other words */
+	if (c_line->line)
+	{
+        ERROR("Unexpected words in extern command", (*c_line).line_number)
+		error_flag = 1;
+	}
     
 }
+
+/*-------------------------------------------*/
+
+
+/* extract each command line */
+void parseCommand(code_line *c_line, char *symbol)
+{
+    /* if string */
+	if (strncmp(c_line->line, ".string", sizeof(".string") - 1) == 0)
+	{
+		/* if there is a symbol */
+		if (symbol)
+		{
+			ihn = int_install(symbol, dc, data_symtab);
+		}
+        c_line->line += (sizeof(".string") - 1);
+		/* use the auxiliary function to extract the string */
+		extract_string(c_line);
+	}
+    /* if data */
+	else if (strncmp((*c_line).line, ".data", sizeof(".data") - 1) == 0)
+	{
+		if (symbol)
+		{
+			ihn = int_install(symbol, dc, data_symtab);
+		}
+        c_line->line += (sizeof(".data") - 1);
+		/* use the auxilary function to extract the data */
+		extract_data(c_line);
+	}
+	/* if entry */
+	else if (strncmp(c_line->line, ".entry", sizeof(".entry") - 1) == 0)
+	{
+        c_line->line += (sizeof(".entry") - 1);
+		/* use the auxilary function */
+		extract_entry(c_line);
+	}
+	/* if extern */
+	else if (strncmp(c_line->line, ".extern", sizeof(".extern") - 1) == 0)
+	{
+        c_line->line += (sizeof(".extern") - 1);
+		/* use the auxilary function */
+		extract_extern(c_line);
+	}
+	else
+	{
+		ERROR("Unrecognized command", (*c_line).line_number)
+		error_flag = 1;
+	}
+    c_line->done = 1;
+}
+
 
 /* this function is called only in start of day, and loading all the opcodes into the hashtable */
 void init_op_table()
