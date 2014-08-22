@@ -3,7 +3,7 @@
 #define MAX_FILENAME 20
 #define PAD 1
 #define NO_PAD 0
-#define BASE 6
+#define BASE 8
 
 #define MOV 0
 #define CMP 1

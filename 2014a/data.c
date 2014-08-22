@@ -67,6 +67,7 @@ void init_instruction_line(instruction_line *il)
     il->src_addr = 0;
     il->opcode = 0;
     il->type = 0;
-    il->rsvd = 0;
+    il->dbl = 0;
+    il->rsvd = 0; /***?***/
 }
 

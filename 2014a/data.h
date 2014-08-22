@@ -5,6 +5,7 @@
 #define SADDR_WIDTH 2
 #define OPCODE_WIDTH 4
 #define TYPE_WIDTH 1
+#define DBL_WIDTH 1
 #define RSVD_WIDTH 3
 
 #define COMB_OFFSET 0
@@ -14,6 +15,7 @@
 #define SADDR_OFFSET 10
 #define OPCODE_OFFSET 12
 #define TYPE_OFFSET 16
+#define DBL_OFFSET 17
 #define RSVD_OFFSET 17
 
 /* type for 20 bits data */
@@ -30,6 +32,7 @@ typedef struct instrline {
     unsigned int src_addr  : SADDR_WIDTH;
     unsigned int opcode    : OPCODE_WIDTH;
     unsigned int type      : TYPE_WIDTH;
+    unsigned int dbl       : DBL_WIDTH;
     unsigned int rsvd      : RSVD_WIDTH;
 } instruction_line;
 
