@@ -312,46 +312,32 @@ void parse_instruction(code_line *c_line)
 		return;
 	}
 	(c_line->line)++;
-	
-	
-/***********************************************************************************************/
 
-/* check for the dbl field*/
-if (c_line->line[0]== 0)
-
-{
-/*dbl is 0*/
-c_line->instruction->dbl = 0;
-
-}
-/*dbl is 1*/
-else if(c_line->line[0] == 1)
-{
-/*dbl value is illegal*/
-c_line->instruction->dbl = 1;
-}
-
-
-else
-{
-ERROR("Ilegal value for dbl", (*c_line).line_number)
-error_flag = 1;
-}	
-/*	
-	
-	(c_line->line)++;
- make sure the repeat value is legal 
-	if ((c_line->line[0] < '1') || (c_line->line[0] > '3'))
+	/* check for the dbl field*/
+	if (c_line->line[0]== 0)
 	{
-		ERROR("Wrong value for repeat. must be between 1 and 3", (*c_line).line_number)
-		error_flag = 1;
-		return;
+		/*dbl is 0*/
+		c_line->instruction->dbl = 0;
+
 	}
+	/*dbl is 1*/
+	else if(c_line->line[0] == 1)
+	{
+		/*dbl value is illegal*/
+		c_line->instruction->dbl = 1;
+	}
+	else
+	{
+		ERROR("Ilegal value for dbl", (*c_line).line_number)
+		error_flag = 1;
+	}	
+	(c_line->line)++;
+
     c_line->repeat = c_line->line[0] - '0';
 	(c_line->line)++;
 	remove_pre_spaces(&(c_line->line));
     
-	 read the expected number of operands */
+	 /*read the expected number of operands */
     c_line->line = strtok(c_line->line, " \t,\n");
 	while (num_of_exp_operands-- > 0)
 	{
