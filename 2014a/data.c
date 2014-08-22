@@ -31,6 +31,7 @@ data_line bline2data(instruction_line bl)
     tmp.data |= (mask_by_width[SADDR_WIDTH]  << SADDR_OFFSET)  & (bl.src_addr << SADDR_OFFSET);
     tmp.data |= (mask_by_width[OPCODE_WIDTH] << OPCODE_OFFSET) & (bl.opcode << OPCODE_OFFSET);
     tmp.data |= (mask_by_width[TYPE_WIDTH]   << TYPE_OFFSET)   & (bl.type << TYPE_OFFSET);
+    tmp.data |= (mask_by_width[DBL_WIDTH]    << DBL_OFFSET)    & (bl.dbl << DBL_OFFSET);
     tmp.data |= (mask_by_width[RSVD_WIDTH]   << RSVD_OFFSET)   & (bl.rsvd << RSVD_OFFSET);
 
     return tmp;

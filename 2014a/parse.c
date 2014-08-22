@@ -320,14 +320,14 @@ void parse_instruction(code_line *c_line)
 if (c_line->line[0]== 0)
 
 {
-/**/
+/*dbl is 0*/
 c_line->instruction->dbl = 0;
 
 }
-
+/*dbl is 1*/
 else if(c_line->line[0] == 1)
 {
-/**/
+/*dbl value is illegal*/
 c_line->instruction->dbl = 1;
 }
 
@@ -336,11 +336,7 @@ else
 {
 ERROR("Ilegal value for dbl", (*c_line).line_number)
 error_flag = 1;
-
-}
-
-	
-	
+}	
 /*	
 	
 	(c_line->line)++;

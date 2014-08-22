@@ -16,7 +16,7 @@
 #define OPCODE_OFFSET 12
 #define TYPE_OFFSET 16
 #define DBL_OFFSET 17
-#define RSVD_OFFSET 17
+#define RSVD_OFFSET 18
 
 /* type for 20 bits data */
 typedef struct dline {
