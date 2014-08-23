@@ -36,74 +36,74 @@ int i, ic, dc;
 char flagForPRINT_ERROR = 0, flagForExtern = 0, flagForEntry = 0;
 
 /* this function is checking if there is a symbol. if yes, its returning a pointer to it, if not, returns null */
-char *fetchSymbol(code_line *c_line)
+char *fetchSymbol(code_line *codeLine)
 {
-    char *tmp = (c_line->line);
+    char *tmp = (codeLine->line);
 	/* while its not end of line */
-    while (*(c_line->line) != '\0')
+    while (*(codeLine->line) != '\0')
     {
 		/* if there is a : char, its probably has symbol */
-        if (*(c_line->line) == ':')
+        if (*(codeLine->line) == ':')
         {
 			/* put null char at end of symbol */
-            *((c_line->line)++) = '\0';
+            *((codeLine->line)++) = '\0';
 			/* make sure its starts with a char */
             if (!isalpha(tmp[0]))
             {
-                PRINT_ERROR("Symbol should start with a char", c_line->line_number)
+                PRINT_ERROR("Symbol should start with a char", codeLine->line_number)
                 flagForPRINT_ERROR = 1;
             }
             return tmp;
         }
-        (c_line->line)++;
+        (codeLine->line)++;
     }
-    c_line->line = tmp;
+    codeLine->line = tmp;
     return NULL;
 }
 
 /* this function extract the data from a data command */
-void parseData(code_line *c_line)
+void parseData(code_line *codeLine)
 {
     int sign;
     int sum;
 	char expecting_number = 0;
 	/* while its not end of line */
-    while ((*c_line).line[0] != '\n')
+    while ((*codeLine).line[0] != '\n')
     {
 		/* remove the spaces from the begining of the line */
-		trim(&((*c_line).line));
+		trim(&((*codeLine).line));
 		/* check sign */
-        if (c_line->line[0] == '-')
+        if (codeLine->line[0] == '-')
         {
             sign = -1;
-            (c_line->line)++;
+            (codeLine->line)++;
         }
 		/* make sure its start with digit */
-        if (!isdigit((*c_line).line[0]))
+        if (!isdigit((*codeLine).line[0]))
         {
-            PRINT_ERROR("Wrong .data format, expecting number", (*c_line).line_number)
+            PRINT_ERROR("Wrong .data format, expecting number", (*codeLine).line_number)
 			flagForPRINT_ERROR = 1;
         }
         else
         {
             sum = 0;
             sign = 1;
-            while (isdigit((*c_line).line[0]))
+            while (isdigit((*codeLine).line[0]))
             {
                 sum *= 10;
-                sum += ((*c_line).line[0]) - '0';
-                (c_line->line)++;
+                sum += ((*codeLine).line[0]) - '0';
+                (codeLine->line)++;
             }
 			/* add the number to data arr */
             dataArrayList[dc++] = num2data(sum * sign);
         }
 		
-		trim(&((*c_line).line));
+		trim(&((*codeLine).line));
 		/* if there is more numbers */
-        if (c_line->line[0] == ',')
+        if (codeLine->line[0] == ',')
 		{
 			expecting_number = 1;
-			(c_line->line)++;
+			(codeLine->line)++;
 		}
 		else
 		{
@@ -113,41 +113,41 @@ void parseData(code_line *c_line)
 	/* if the line ended and we still waiting for another number */
 	if (expecting_number == 1)
 	{
-		PRINT_ERROR("Expecting number after \',\'", (*c_line).line_number)
+		PRINT_ERROR("Expecting number after \',\'", (*codeLine).line_number)
 		flagForPRINT_ERROR = 1;
 	}
 
 }
 
 /* this function extract the string from a string command */
-void parseString(code_line *c_line)
+void parseString(code_line *codeLine)
 {
-    trim(&(c_line->line));
+    trim(&(codeLine->line));
 	/* make sure its starts with " */
-    if (!(c_line->line[0] == '\"'))
+    if (!(codeLine->line[0] == '\"'))
     {
-        PRINT_ERROR(".string argument must start with \"", (*c_line).line_number)
+        PRINT_ERROR(".string argument must start with \"", (*codeLine).line_number)
 		flagForPRINT_ERROR = 1;
         return;
     }
 
-    (c_line->line)++;
+    (codeLine->line)++;
 	/* while its not reached the second " */
-    while ((c_line->line[0] != '\"') && (c_line->line[0] != '\0'))
+    while ((codeLine->line[0] != '\"') && (codeLine->line[0] != '\0'))
     {
 		/* add the new string to the array */
-        dataArrayList[dc++] = char2data(c_line->line[0]);
-        (c_line->line)++;
+        dataArrayList[dc++] = char2data(codeLine->line[0]);
+        (codeLine->line)++;
     }
 
 	/* at end, make sure it ends with " */
-    if (c_line->line[0] == '\"')
+    if (codeLine->line[0] == '\"')
     {
         dataArrayList[dc++] = char2data('\0');
     }
     else
     {
-        PRINT_ERROR(".string argument must end with \"", (*c_line).line_number)
+        PRINT_ERROR(".string argument must end with \"", (*codeLine).line_number)
 		flagForPRINT_ERROR = 1;
         return;
     }
@@ -155,48 +155,48 @@ void parseString(code_line *c_line)
 }
 
 /* this function extract the entry from a entry command */
-void parseEntry(code_line *c_line)
+void parseEntry(code_line *codeLine)
 {
 	/* skip on tabs and spaces */
-	c_line->line = strtok(c_line->line, " \t\n");
+	codeLine->line = strtok(codeLine->line, " \t\n");
 	/* if there is no entry */
-	if (!c_line->line)
+	if (!codeLine->line)
 	{
-        PRINT_ERROR("No value found after entry command", (*c_line).line_number)
+        PRINT_ERROR("No value found after entry command", (*codeLine).line_number)
 		flagForPRINT_ERROR = 1;
 		return;
 	}
 	/* add entry to entries array */
-	entryArrayList[counterForEntry++] = strCopy(c_line->line);
-	c_line->line = strtok(NULL, " \t\n");
+	entryArrayList[counterForEntry++] = strCopy(codeLine->line);
+	codeLine->line = strtok(NULL, " \t\n");
 	/* make sure there is no other words */
-	if (c_line->line)
+	if (codeLine->line)
 	{
-        PRINT_ERROR("Unexpected words in entry command", (*c_line).line_number)
+        PRINT_ERROR("Unexpected words in entry command", (*codeLine).line_number)
 		flagForPRINT_ERROR = 1;
 	}
 }
 
 /* this function extract the entry from a entry command */
-void parseExtern(code_line *c_line)
+void parseExtern(code_line *codeLine)
 {
 	/* skip on tabs and spaces */
-	c_line->line = strtok(c_line->line, " \t\n");
+	codeLine->line = strtok(codeLine->line, " \t\n");
 	/* if there is no extern */
-	if (!c_line->line)
+	if (!codeLine->line)
 	{
-        PRINT_ERROR("No value found after extern command", (*c_line).line_number)
+        PRINT_ERROR("No value found after extern command", (*codeLine).line_number)
 		flagForPRINT_ERROR = 1;
 		return;
 	}
 	/* add to the extern hashtable with value 0 */
-    registerIntToHashTab(c_line->line, '0', extrnalCmdList);
+    registerIntToHashTab(codeLine->line, '0', extrnalCmdList);
 	counterForExtern++;
-	c_line->line = strtok(NULL, " \t\n");
+	codeLine->line = strtok(NULL, " \t\n");
 	/* make sure there is no other words */
-	if (c_line->line)
+	if (codeLine->line)
 	{
-        PRINT_ERROR("Unexpected words in extern command", (*c_line).line_number)
+        PRINT_ERROR("Unexpected words in extern command", (*codeLine).line_number)
 		flagForPRINT_ERROR = 1;
 	}
 }
@@ -220,179 +220,178 @@ char checkExpOperands(char *s)
 }
 
 /* this function parsing the instruction given in the line */
-void parsingInstruction(code_line *c_line)
+void parsingInstruction(code_line *codeLine)
 {
 	/* count how many instruction lines this line using, including repeats */
     int local_ic = 0;
 	char num_of_exp_operands;
 	/* isolate the opcode */
-	c_line->line = strtok(c_line->line, "/");
+	codeLine->line = strtok(codeLine->line, "/");
 	/* find it in the opcode hashtable */
-	tempNode = fetchIntFromHashTab(c_line->line, operationList);
+	tempNode = fetchIntFromHashTab(codeLine->line, operationList);
 	/* if its not a valid opcode */
 	if (!tempNode)
 	{
 		/* check if its a comment or empty line */
-        if ((c_line->line[0] == ';') || (c_line->line[0] = '\n'))
+        if ((codeLine->line[0] == ';') || (codeLine->line[0] = '\n'))
         {
-            c_line->done = 1;
+            codeLine->done = 1;
             return;
         }
-        PRINT_ERROR("Ilegal instruction", (*c_line).line_number)
+        PRINT_ERROR("Ilegal instruction", (*codeLine).line_number)
 		flagForPRINT_ERROR = 1;
 		return;
 	}
 	/* use the auxilary function to count the expected operands */
-	num_of_exp_operands = checkExpOperands(c_line->line);
-	c_line->instruction = (instruction_line *) malloc(sizeof(instruction_line) * 8);
+	num_of_exp_operands = checkExpOperands(codeLine->line);
+	codeLine->instruction = (instruction_line *) malloc(sizeof(instruction_line) * 8);
 	/* clear the instruction line */
-    registerInstructionLine(c_line->instruction);
+    registerInstructionLine(codeLine->instruction);
     local_ic++;
-	c_line->instruction->opcode = tempNode->defn;
+	codeLine->instruction->opcode = tempNode->defn;
 	/* seek for null char */
-	while (c_line->line[0] != '\0')
+	while (codeLine->line[0] != '\0')
     {
-        (c_line->line)++;
+        (codeLine->line)++;
     }
-    (c_line->line)++;
+    (codeLine->line)++;
 
 	/* check for the type field, and comb field */
-	switch (c_line->line[0])
+	switch (codeLine->line[0])
 	{
 		case '0': /* type is 0, comb irelevant */
-			c_line->instruction->type = 0;
+			codeLine->instruction->type = 0;
 			break;
 		case '1': /* type is 1, need to check comb value */
-			c_line->instruction->type = 1;
-			(c_line->line)++;
-			if (!(c_line->line[0] == '/'))
+			codeLine->instruction->type = 1;
+			(codeLine->line)++;
+			if (!(codeLine->line[0] == '/'))
 			{
-				PRINT_ERROR("Expecting comb values after type 1", (*c_line).line_number)
+				PRINT_ERROR("Expecting comb values after type 1", (*codeLine).line_number)
 				flagForPRINT_ERROR = 1;
 				return;
 			}
-			(c_line->line)++;
-			switch (c_line->line[0])
+			(codeLine->line)++;
+			switch (codeLine->line[0])
 			{
 				case '0': /* keep default value */
 					break;
 				case '1':
-					c_line->instruction->comb |= 2; /* left bit of comb should be 1 */
+					codeLine->instruction->comb |= 2; /* left bit of comb should be 1 */
 					break;
 				default:
-					PRINT_ERROR("Ilegal value for comb", (*c_line).line_number)
+					PRINT_ERROR("Ilegal value for comb", (*codeLine).line_number)
 					flagForPRINT_ERROR = 1;
 					return;
 			}
-			(c_line->line)++;
+			(codeLine->line)++;
 			/* expecting / */
-			if (!(c_line->line[0] == '/'))
+			if (!(codeLine->line[0] == '/'))
 			{
-				PRINT_ERROR("Expecting cobm values after type 1", (*c_line).line_number)
+				PRINT_ERROR("Expecting cobm values after type 1", (*codeLine).line_number)
 				flagForPRINT_ERROR = 1;
 				return;
 			}
-			(c_line->line)++;
-			switch (c_line->line[0])
+			(codeLine->line)++;
+			switch (codeLine->line[0])
 			{
 				case '0':
 					break; /* keep default value */
 				case '1':
-					c_line->instruction->comb |= 1; /* right bit of comb should be 1 */
+					codeLine->instruction->comb |= 1; /* right bit of comb should be 1 */
 					break;
 				default:
-					PRINT_ERROR("Ilegal value for comb", (*c_line).line_number)
+					PRINT_ERROR("Ilegal value for comb", (*codeLine).line_number)
 					flagForPRINT_ERROR = 1;
 					return;
 			}
             break;
 		default:
-			PRINT_ERROR("Ilegal value for comb", (*c_line).line_number)
+			PRINT_ERROR("Ilegal value for comb", (*codeLine).line_number)
 			flagForPRINT_ERROR = 1;
 			return;
 	}
-	(c_line->line)++;
-	if (!(c_line->line[0] == ','))
+	(codeLine->line)++;
+	if (!(codeLine->line[0] == ','))
 	{
-		PRINT_ERROR("Expecting ',' after type and comb values", (*c_line).line_number)
+		PRINT_ERROR("Expecting ',' after type and comb values", (*codeLine).line_number)
 		flagForPRINT_ERROR = 1;
 		return;
 	}
-	(c_line->line)++;
+	(codeLine->line)++;
 
-    c_line->repeat = c_line->line[0] - '0';
-
+    codeLine->repeat = codeLine->line[0] - '0';
    	/* check for repeat number, dbl bit */
-    if(c_line->repeat < 0 || c_line->repeat > 1)
+    if(codeLine->repeat < 0 || codeLine->repeat > 1)
 	{
-		PRINT_ERROR("Invalid command dbl value. Valid values are 0,1", (*c_line).line_number);
+		PRINT_ERROR("Invalid command dbl value. Valid values are 0,1", (*codeLine).line_number);
 		return;
 	}
 	else
 	{
-		c_line->instruction->dbl = c_line->repeat;
+		codeLine->instruction->dbl = codeLine->repeat;
 	}
-	(c_line->line)++;
-	trim(&(c_line->line));
+	(codeLine->line)++;
+	trim(&(codeLine->line));
     
 	 /*read the expected number of operands */
-    c_line->line = strtok(c_line->line, " \t,\n");
+    codeLine->line = strtok(codeLine->line, " \t,\n");
 	while (num_of_exp_operands-- > 0)
 	{
         if (num_of_exp_operands == 1)
         {
 			/* its the first operand */
-            c_line->src_opr = strCopy(c_line->line);
+            codeLine->src_opr = strCopy(codeLine->line);
         }
         else
         {
 			/* its the second operand */
-            c_line->dest_opr = strCopy(c_line->line);
+            codeLine->dest_opr = strCopy(codeLine->line);
         }
 		/* check for the type of the oprands and decide how much ic should be incremented */
-        switch (c_line->line[0])
+        switch (codeLine->line[0])
 		{
 			case '#':
                 local_ic++;
                 if (num_of_exp_operands == 1)
                 {
-                    c_line->instruction->src_addr = 0;
+                    codeLine->instruction->src_addr = 0;
                 }
                 else
                 {
-                    c_line->instruction->dest_addr = 0;
+                    codeLine->instruction->dest_addr = 0;
                 }
                 break;
 			case 'r':
-                (c_line->line)++;
-                if ((c_line->line[0] >= '0') && (c_line->line[0] <='7'))
+                (codeLine->line)++;
+                if ((codeLine->line[0] >= '0') && (codeLine->line[0] <='7'))
                 {
                     if (num_of_exp_operands == 1)
                     {
-                        c_line->instruction->src_reg = c_line->line[0] - '0';
-                        free(c_line->src_opr);
-                        c_line->instruction->src_addr = 3;
+                        codeLine->instruction->src_reg = codeLine->line[0] - '0';
+                        free(codeLine->src_opr);
+                        codeLine->instruction->src_addr = 3;
                     }
                     else
                     {
-                        c_line->instruction->dest_reg = c_line->line[0] - '0';
-                        free(c_line->dest_opr);
-                        c_line->instruction->dest_addr = 3;
+                        codeLine->instruction->dest_reg = codeLine->line[0] - '0';
+                        free(codeLine->dest_opr);
+                        codeLine->instruction->dest_addr = 3;
                     }
                     break;
                 }
 		    default:
                 local_ic++;
-                if (strstr(c_line->line, "{!"))
+                if (strstr(codeLine->line, "{!"))
                 {
                     local_ic++;
                     if (num_of_exp_operands == 1)
                     {
-                        c_line->instruction->src_addr = 2;
+                        codeLine->instruction->src_addr = 2;
                     }
                     else
                     {
-                        c_line->instruction->dest_addr = 2;
+                        codeLine->instruction->dest_addr = 2;
                     }
 
                 }
@@ -400,66 +399,66 @@ void parsingInstruction(code_line *c_line)
                 {
                     if (num_of_exp_operands == 1)
                     {
-                        c_line->instruction->src_addr = 1;
+                        codeLine->instruction->src_addr = 1;
                     }
                     else
                     {
-                        c_line->instruction->dest_addr = 1;
+                        codeLine->instruction->dest_addr = 1;
                     }
                 }
 		}
-        c_line->line = strtok(NULL, " \t,\n");
+        codeLine->line = strtok(NULL, " \t,\n");
 	}
-    ic += (local_ic * c_line->repeat);
+    ic += (local_ic * codeLine->repeat);
 	
 }
 
 /* this function parsing the commands line (string, data, extern and entry) */
-void parsingCmd(code_line *c_line, char *symbol)
+void parsingCmd(code_line *codeLine, char *symbol)
 {
 	/* if string */
-	if (strncmp(c_line->line, ".string", sizeof(".string") - 1) == 0)
+	if (strncmp(codeLine->line, ".string", sizeof(".string") - 1) == 0)
 	{
 		/* if there is a symbol */
 		if (symbol)
 		{
 			tempNode = registerIntToHashTab(symbol, dc, dataSymbolsList);
 		}
-        c_line->line += (sizeof(".string") - 1);
+        codeLine->line += (sizeof(".string") - 1);
 		/* use the auxilary function to extract the string */
-		parseString(c_line);
+		parseString(codeLine);
 	}
 	/* if data */
-	else if (strncmp((*c_line).line, ".data", sizeof(".data") - 1) == 0)
+	else if (strncmp((*codeLine).line, ".data", sizeof(".data") - 1) == 0)
 	{
 		if (symbol)
 		{
 			tempNode = registerIntToHashTab(symbol, dc, dataSymbolsList);
 		}
-        c_line->line += (sizeof(".data") - 1);
+        codeLine->line += (sizeof(".data") - 1);
 		/* use the auxilary function to extract the data */
-		parseData(c_line);
+		parseData(codeLine);
 	}
 	/* if entry */
-	else if (strncmp(c_line->line, ".entry", sizeof(".entry") - 1) == 0)
+	else if (strncmp(codeLine->line, ".entry", sizeof(".entry") - 1) == 0)
 	{
-        c_line->line += (sizeof(".entry") - 1);
+        codeLine->line += (sizeof(".entry") - 1);
 		/* use the auxilary function */
-		parseEntry(c_line);
+		parseEntry(codeLine);
 	}
 	/* if extern */
-	else if (strncmp(c_line->line, ".extern", sizeof(".extern") - 1) == 0)
+	else if (strncmp(codeLine->line, ".extern", sizeof(".extern") - 1) == 0)
 	{
-        c_line->line += (sizeof(".extern") - 1);
+        codeLine->line += (sizeof(".extern") - 1);
 		/* use the auxilary function */
-		parseExtern(c_line);
+		parseExtern(codeLine);
 	}
 	else
 	{
-		PRINT_ERROR("Unrecognized command", (*c_line).line_number)
+		PRINT_ERROR("Unrecognized command", (*codeLine).line_number)
 		flagForPRINT_ERROR = 1;
 	}
-    c_line->done = 1;
+    codeLine->done = 1;
 }
 
 /* 
