@@ -27,7 +27,7 @@ static int_hash_node *optab[HASHSIZE];
 /* temporary node for lookuping in the linkde lists */
 int_hash_node *ihn;
 /* array for entries */
-char *entry_arr[MAX_ARR_SIZE];
+char *entryArrayList[MAX_ARR_SIZE];
 /* counters for entries end externals */
 int counterForEntry, counterForExtern;
 /* general counter, and data and instructions counter */
@@ -167,7 +167,7 @@ void parseEntry(code_line *c_line)
 		return;
 	}
 	/* add entry to entries array */
-	entry_arr[counterForEntry++] = strdup(c_line->line);
+	entryArrayList[counterForEntry++] = strdup(c_line->line);
 	c_line->line = strtok(NULL, " \t\n");
 	/* make sure there is no other words */
 	if (c_line->line)
@@ -732,21 +732,21 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
         line_count++;
     }
 	/* write to ent file the entries */
-    for (i = 0; entry_arr[i]; i++)
+    for (i = 0; entryArrayList[i]; i++)
     {
 		/* try to find the address in the data hashtable */
-        if ((ihn = fetchIntFromHashTab(entry_arr[i], data_symtab)))
+        if ((ihn = fetchIntFromHashTab(entryArrayList[i], data_symtab)))
         {
-            fprintf(ent, "%s\t%s\n", entry_arr[i], to_base(ihn->defn + LINE_OFFSET + 1 + ic, BASE, base_result, NO_PAD));
+            fprintf(ent, "%s\t%s\n", entryArrayList[i], to_base(ihn->defn + LINE_OFFSET + 1 + ic, BASE, base_result, NO_PAD));
         }
 		/* try to find the address in the data hashtable */
-        else if((ihn = fetchIntFromHashTab(entry_arr[i], inst_symtab)))
+        else if((ihn = fetchIntFromHashTab(entryArrayList[i], inst_symtab)))
         {
-            fprintf(ent, "%s\t%s\n", entry_arr[i], to_base(ihn->defn + LINE_OFFSET + 1, BASE, base_result, NO_PAD));
+            fprintf(ent, "%s\t%s\n", entryArrayList[i], to_base(ihn->defn + LINE_OFFSET + 1, BASE, base_result, NO_PAD));
         }
         else
         {
-            fprintf(stderr, "Error, can't find assress for entry %s\n", entry_arr[i]);
+            fprintf(stderr, "Error, can't find assress for entry %s\n", entryArrayList[i]);
             flagForError = 1;
         }
     }
