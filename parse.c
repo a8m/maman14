@@ -12,30 +12,35 @@
 #include "systemData.h"
 #include "parse.h"
 #include "hashTable.h"
- #include "common.h"
+#include "common.h"
 
 /* array to store the data parsed from the code */
 data_line dataArrayList[MAX_ARR_SIZE];
-/* linked list for the symbols addresses of data pointers */
+/* linkedList for the symbols addresses of data pointers */
 static intLinkedListNode *dataSymbolsList[HASHSIZE];
-/* linked list for the symbols addresses of instructions pointers */
+/* linkedList  for the symbols addresses of instructions pointers */
 static intLinkedListNode *instructionsSymbolsList[HASHSIZE];
-/* linked list for the external commands */
+/* linkedList  for the external commands */
 static intLinkedListNode *extrnalCmdList[HASHSIZE];
-/* linked list for the opcode replacements */
+/* linkedList  for the opcode replacements */
 static intLinkedListNode *operationList[HASHSIZE];
-/* temporary node for lookuping in the linkde lists */
+/* temporary node */
 intLinkedListNode *tempNode, *tempDynamicNode;
 /* array for entries */
 char *entryArrayList[MAX_ARR_SIZE];
-/* counters for entries end externals */
+/* global counters for entries end externals */
 int counterForEntry, counterForExtern;
-/* general counter, and data and instructions counter */
+/* global counte for data and instructions counter */
 int i, ic, dc;
-/* flags for decide if to create the files */
+/* global flags */
 char flagForError = 0, flagForExtern = 0, flagForEntry = 0;
 
-/* this function is checking if there is a symbol. if yes, its returning a pointer to it, if not, returns null */
+/*
+ * Checks whether code_line have symbol
+ * if there, return pointer to it, else null
+ * @param code_line {String}
+ * @return String/NULL
+ */
 char *fetchSymbol(codeLineObject *codeLine)
 {
     char *tmp = (codeLine->line);
@@ -61,7 +66,10 @@ char *fetchSymbol(codeLineObject *codeLine)
     return NULL;
 }
 
-/* this function extract the data from a data command */
+/*
+ * @description parse .data in codeLine, throw errors if needed
+ * @param codeLine {codeLineObject}
+ */
 void parseData(codeLineObject *codeLine)
 {
     int sign;
@@ -119,7 +127,10 @@ void parseData(codeLineObject *codeLine)
 
 }
 
-/* this function extract the string from a string command */
+/*
+ * @description parse .string in codeLine, throw errors if needed
+ * @param codeLine {codeLineObject}
+ */
 void parseString(codeLineObject *codeLine)
 {
     trim(&(codeLine->line));
@@ -153,8 +164,10 @@ void parseString(codeLineObject *codeLine)
     }
     
 }
-
-/* this function extract the entry from a entry command */
+/*
+ * @description parse .entry in codeLine, throw errors if needed
+ * @param codeLine {codeLineObject}
+ */
 void parseEntry(codeLineObject *codeLine)
 {
 	/* skip on tabs and spaces */
@@ -176,8 +189,10 @@ void parseEntry(codeLineObject *codeLine)
 		flagForError = 1;
 	}
 }
-
-/* this function extract the entry from a entry command */
+/*
+ * @description parse .extern in codeLine, throw errors if needed
+ * @param codeLine {codeLineObject}
+ */
 void parseExtern(codeLineObject *codeLine)
 {
 	/* skip on tabs and spaces */
@@ -201,7 +216,11 @@ void parseExtern(codeLineObject *codeLine)
 	}
 }
 
-/* this functions returnes the number of operands expected per opcode */
+/*
+ * @description checkExpOperands
+ * @param *s {String}
+ * @return char
+ */
 char checkExpOperands(char *s)
 {
 	if (strcmp(s, "rts") == 0 || strcmp(s, "stop") == 0)
@@ -219,7 +238,10 @@ char checkExpOperands(char *s)
 	}
 }
 
-/* this function parsing the instruction given in the line */
+/*
+ * @description parsing instruction on first phase
+ * @param *codeLine {codeLineObject}
+ */
 void parsingInstruction(codeLineObject *codeLine)
 {
 	/* count how many instruction lines this line using, including oprRepeats */
@@ -412,8 +434,11 @@ void parsingInstruction(codeLineObject *codeLine)
     ic += (localCounter * codeLine->oprRepeat);
 	
 }
-
-/* this function parsing the commands line (string, data, extern and entry) */
+/*
+ * @description parsing command on first phase,
+ * use parseString, parseData, parseExtern, parseEntry helpers
+ * @param *codeLine {codeLineObject}
+ */
 void parsingCmd(codeLineObject *codeLine, char *symbol)
 {
 	/* if string */
@@ -460,7 +485,6 @@ void parsingCmd(codeLineObject *codeLine, char *symbol)
 	}
     codeLine->done = 1;
 }
-
 /* 
  * @description Do the first parsing to the line, 
  * and leaving for the second parsing to check for the symbols addresses and parsing the operands 
@@ -496,9 +520,16 @@ int firstPhase(codeLineObject *file, int numberOfLine)
 
     return 0;
 }
-
-/* this function is for the second parsing, parsing each operand */
-void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, int org_line_num)
+/*
+ * @description parse operand
+ * @param *op {String}
+ * @param addr {int}
+ * @param *obj {FILE}
+ * @param *ext {FILE}
+ * @param *lineCount {*int}
+ * @param orgLineNum {int}
+ */
+void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *lineCount, int orgLineNum)
 {
 	/* 2 temporary arrays to get the base 8 results */
 	char resultBaseArray[MAX_DIGIT + 1], tempBaseArray[MAX_DIGIT + 1], tempChar[10];
@@ -520,36 +551,36 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 				op++;
 			}
 			/* write the given number to the obj file */
-			fprintf(obj, "%s\t%s\t%c\n",baseConvertor((*line_count) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD) , baseConvertor(num2data(sum * sign).data, BASE, tempBaseArray, PAD), 'A');
-            (*line_count)++;
+			fprintf(obj, "%s\t%s\t%c\n",baseConvertor((*lineCount) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD) , baseConvertor(num2data(sum * sign).data, BASE, tempBaseArray, PAD), 'A');
+            (*lineCount)++;
 			break;
 		case 1: /* its symbol */
 			/* check in the data hashtable */
 			if ((tempNode = fetchIntFromHashTab(op, dataSymbolsList)))
 			{
 				/* write the symbol address to the obj file */
-				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(num2data(tempNode->defn + ic + LINE_OFFSET + 1).data, BASE, tempBaseArray, PAD), 'R');
-                (*line_count)++;
+				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*lineCount) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(num2data(tempNode->defn + ic + LINE_OFFSET + 1).data, BASE, tempBaseArray, PAD), 'R');
+                (*lineCount)++;
 			}
 			/* check in the instruction hashtable */
             else if ((tempNode = fetchIntFromHashTab(op, instructionsSymbolsList)))
             {
 				/* write the symbol address to the obj file */
-				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(num2data(tempNode->defn + LINE_OFFSET + 1).data, BASE, tempBaseArray, PAD), 'R');
-                (*line_count)++;
+				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*lineCount) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(num2data(tempNode->defn + LINE_OFFSET + 1).data, BASE, tempBaseArray, PAD), 'R');
+                (*lineCount)++;
             }
 			/* check in the externals hashtable */
             else if ((tempNode = fetchIntFromHashTab(op, extrnalCmdList)))
 			{
 				/* write 0 to the obj file */
-				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count)+ LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(num2data(0).data, BASE, tempBaseArray, PAD), 'E');
+				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*lineCount)+ LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(num2data(0).data, BASE, tempBaseArray, PAD), 'E');
 				/* add line to the ext file */
-				fprintf(ext, "%s\t%s\n", op, baseConvertor(*line_count + LINE_OFFSET, BASE, resultBaseArray, NO_PAD));
-				(*line_count)++;
+				fprintf(ext, "%s\t%s\n", op, baseConvertor(*lineCount + LINE_OFFSET, BASE, resultBaseArray, NO_PAD));
+				(*lineCount)++;
 			}
             else
             {
-                PRINT_ERROR("Can't find symbol in symbol table or in extern table", org_line_num)
+                PRINT_ERROR("Can't find symbol in symbol table or in extern table", orgLineNum)
                 flagForError = 1;
             }
             break;
@@ -561,25 +592,25 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 			/* check for the symbol in data hashtable */
             if ((tempNode = fetchIntFromHashTab(op, dataSymbolsList)))
             {
-				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(num2data(tempNode->defn + ic + LINE_OFFSET + 1).data, BASE, tempBaseArray, PAD), 'R');
-                (*line_count)++;
+				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*lineCount) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(num2data(tempNode->defn + ic + LINE_OFFSET + 1).data, BASE, tempBaseArray, PAD), 'R');
+                (*lineCount)++;
             }
 			/* check for the symbol in instruction hashtable */
             else if ((tempNode = fetchIntFromHashTab(op, instructionsSymbolsList)))
             {
-				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(num2data(tempNode->defn + LINE_OFFSET + 1).data, BASE, tempBaseArray, PAD), 'R');
-                (*line_count)++;
+				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*lineCount) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(num2data(tempNode->defn + LINE_OFFSET + 1).data, BASE, tempBaseArray, PAD), 'R');
+                (*lineCount)++;
             }
 			/* check for the symbol in externals hashtable */
             else if ((tempNode = fetchIntFromHashTab(op, extrnalCmdList)))
             {
-				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(num2data(0).data, BASE, tempBaseArray, PAD), 'E');
-				fprintf(ext, "%s\t%s\n", op, baseConvertor(*line_count + LINE_OFFSET, BASE, resultBaseArray, NO_PAD));
-				(*line_count)++;
+				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*lineCount) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(num2data(0).data, BASE, tempBaseArray, PAD), 'E');
+				fprintf(ext, "%s\t%s\n", op, baseConvertor(*lineCount + LINE_OFFSET, BASE, resultBaseArray, NO_PAD));
+				(*lineCount)++;
             }
             else
             {
-                PRINT_ERROR("Can't find symbol in symbol table or in extern table", org_line_num)
+                PRINT_ERROR("Can't find symbol in symbol table or in extern table", orgLineNum)
                 flagForError = 1;
             }
             op[i] = '{'; /* put back { char for the case this line will oprRepeat */
@@ -604,27 +635,30 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 			/* make sure it ends with ) */
             if (!(op[0] == '}'))
             {
-                PRINT_ERROR("Wrong format for elaborate addressing", org_line_num)
+                PRINT_ERROR("Wrong format for elaborate addressing", orgLineNum)
                 flagForError = 1;
                 break;
             }
 			/* make sure you are not going out of the data array bounds */
             if (sum >= dc)
             {
-                PRINT_ERROR("Given index is out of the data bounds", org_line_num)
+                PRINT_ERROR("Given index is out of the data bounds", orgLineNum)
                 flagForError = 1;
             }
             else
             {
-                fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(dataArrayList[sum].data, BASE, tempBaseArray, PAD), 'A');
-                (*line_count)++;
+                fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*lineCount) + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(dataArrayList[sum].data, BASE, tempBaseArray, PAD), 'A');
+                (*lineCount)++;
             }
             break;
 	}
 
 }
-
-/* this function checks if the given addressing is valid */
+/*
+ * @description check for address
+ * @param *instLine {instructionLineObject}
+ * @param lineNumber {int}
+ */
 void checkForAdress(instructionLineObject *instLine, int lineNumber)
 {
     switch(instLine->opcode)
@@ -694,7 +728,7 @@ int secondPhase(codeLineObject *file, int numberOfLine, char *filePath)
 {
 	/* temporary arrays for converting to base 8 */
 	char resultBaseArray[MAX_DIGIT + 1], tempBaseArray[MAX_DIGIT +1], fileName[MAX_FILENAME];
-    int i, j, line_count = 0;
+    int i, j, lineCount = 0;
 	/* pointers for the files */
     FILE *obj, *ext, *ent;
 	/* open all the relevant files */
@@ -706,7 +740,7 @@ int secondPhase(codeLineObject *file, int numberOfLine, char *filePath)
     ent = fopen(fileName, "w");
 	/* print header */
     fprintf(obj, "%s %s\n", baseConvertor(ic, BASE, resultBaseArray, NO_PAD), baseConvertor(dc, BASE, tempBaseArray, NO_PAD));
-    line_count++;
+    lineCount++;
     for (i = 0; i < numberOfLine; i++) /* loop over all the code lines */
     {
 		/* only if this file need more parsing */
@@ -718,19 +752,19 @@ int secondPhase(codeLineObject *file, int numberOfLine, char *filePath)
             for (j = 0; j < file[i].oprRepeat; j++)
             {
 				/* write to file the actual instruction */
-                fprintf(obj, "%s\t%s\t%c\n",baseConvertor(line_count + LINE_OFFSET, BASE, resultBaseArray, NO_PAD) , baseConvertor(bline2data(*(file[i].instruction)).data, BASE, tempBaseArray, PAD), 'A');
-                line_count++;
+                fprintf(obj, "%s\t%s\t%c\n",baseConvertor(lineCount + LINE_OFFSET, BASE, resultBaseArray, NO_PAD) , baseConvertor(bline2data(*(file[i].instruction)).data, BASE, tempBaseArray, PAD), 'A');
+                lineCount++;
 				/* if there is source operand */
                 if (file[i].srcOpr)
                 {
 					/* use the auxilary function to parse the operand */
-					parsingOperand(file[i].srcOpr, file[i].instruction->srcAddr, obj, ext, &line_count, file[i].lineNumber);
+					parsingOperand(file[i].srcOpr, file[i].instruction->srcAddr, obj, ext, &lineCount, file[i].lineNumber);
                 }
 				/* if there is source operand */
                 if (file[i].destOpr)
                 {
 					/* use the auxilary function to parse the operand */
-					parsingOperand(file[i].destOpr, file[i].instruction->destAddr, obj, ext, &line_count, file[i].lineNumber);
+					parsingOperand(file[i].destOpr, file[i].instruction->destAddr, obj, ext, &lineCount, file[i].lineNumber);
                 }
             }
         }
@@ -738,8 +772,8 @@ int secondPhase(codeLineObject *file, int numberOfLine, char *filePath)
 	/* write to obj file the data array */
     for (i = 0; i < dc; i++)
     {
-        fprintf(obj, "%s\t%s\n", baseConvertor(line_count + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(dataArrayList[i].data, BASE, tempBaseArray, PAD));
-        line_count++;
+        fprintf(obj, "%s\t%s\n", baseConvertor(lineCount + LINE_OFFSET, BASE, resultBaseArray, NO_PAD), baseConvertor(dataArrayList[i].data, BASE, tempBaseArray, PAD));
+        lineCount++;
     }
 	/* write to ent file the entries */
     for (i = 0; entryArrayList[i]; i++)

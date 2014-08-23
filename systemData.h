@@ -9,8 +9,35 @@
 #ifndef SYSTEMDATA_H_
 #define SYSTEMDATA_H_
 
+/* 
+ * global define and const unique for 
+ * this operation system
+ */
 #define EXIT -1
 #define FALSE 0
+#define MAX_ARR_SIZE 1000
+#define LINE_OFFSET 99
+#define MAX_FILENAME 20
+#define PAD 1
+#define NO_PAD 0
+#define BASE 8
+
+#define MOV 0
+#define CMP 1
+#define ADD 2
+#define SUB 3
+#define NOT 4
+#define CLR 5
+#define LEA 6
+#define INC 7
+#define DEC 8
+#define JMP 9
+#define BNE 10
+#define RED 11
+#define PRN 12
+#define JSR 13
+#define RTS 14
+#define STOP 15
  
 #define COMB_WIDTH 2
 #define DREG_WIDTH 3
@@ -62,15 +89,29 @@ typedef struct cline {
 } codeLineObject;
 
 
-/* this function returning data_line containing the char in the argument */
-data_line char2data(char ch);
-/* this function returning data_line containing the (boolean) instruction line in the argument */
+/*
+ * @decription returning data_line containing the char in the argument 
+ */
+ data_line char2data(char ch);
+
+/* 
+ * @description returning data_line containing the (boolean) instruction line in the argument 
+ */
 data_line bline2data(instructionLineObject bl);
-/* this function returning data_line containing the int in the argument with the sign bit */
+
+/* 
+ * @description returning data_line containing the int in the argument with the sign bit 
+ */
 data_line num2data(int num);
-/* this function clearing the values of an instruction line */
-void registerInstructionLine(instructionLineObject *il);
-/* after allocating memory, the data need to be clear from garbage */
+
+/* 
+ * @description clearing the values of an instruction line 
+ */
+ void registerInstructionLine(instructionLineObject *il);
+
+/* 
+ * @descriptoin after allocating memory, the data need to be clear from garbage 
+ */
 void registerDataLine(data_line *dl);
 
 #endif

@@ -12,6 +12,9 @@
  */
 unsigned char maskWidthArray[] = {0x0, 0x1, 0x3, 0x7, 0xF, 0x1F, 0x3F, 0x7F, 0xFF};
 
+/* 
+ * @descriptoin after allocating memory, the data need to be clear from garbage 
+ */
 void registerDataLine(data_line *dl)
 {
     dl->data = 0;
