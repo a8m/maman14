@@ -34,7 +34,7 @@
  * @param *file {code_line}
  * @param num_of_lines {int}
  */
-int first_parsing(code_line *file, int num_of_lines);
+int first_phase(code_line *file, int num_of_lines);
 /* 
  * @description Do the second parsing for the line, resolving the symbols and parsing the operands
  * @param *file {code_line}

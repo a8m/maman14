@@ -468,7 +468,7 @@ void parse_command(code_line *c_line, char *symbol)
  * @param *file {code_line}
  * @param num_of_lines {int}
  */
-int first_parsing(code_line *file, int num_of_lines)
+int first_phase(code_line *file, int num_of_lines)
 {
     char *symbol;
 	error_flag = 0;
