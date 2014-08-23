@@ -30,7 +30,7 @@ int main(int argc, char **argv)
         /* if the files can't be found */
         if (fp == NULL)
         {
-            printf("Error: can't find file %s\n, Please insert files name without suffix .as", file_name);
+            printf("PRINT_ERROR: can't find file %s\n, Please insert files name without suffix .as", file_name);
             return EXIT;
         }
         
@@ -51,7 +51,7 @@ int main(int argc, char **argv)
                 }
                 else
                 {
-                    printf("%s", "error reallocating");
+                    printf("%s", "PRINT_ERROR reallocating");
                     return EXIT;
                 }
             }

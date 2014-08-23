@@ -29,13 +29,13 @@ void trim(char **str);
 char *to_base(int num, int base, char *result, int pad);
 
 /* 
- * @descipriton MACRO - error printing 
+ * @descipriton MACRO - PRINT_ERROR printing 
  * @param msg {String}
  * @param line number {int}
  * @example[usage]
- * ERROR("Hi, I'm an error message", 3)
+ * PRINT_ERROR("Hi, I'm an PRINT_ERROR message", 3)
  */
-#define ERROR(MSG,LINE) fprintf(stderr, "Error in line %d: %s\n", LINE, MSG);
+#define PRINT_ERROR(MSG,LINE) fprintf(stderr, "PRINT_ERROR in line %d: %s\n", LINE, MSG);
 
 /* 
  * max digit for the to_base function 
