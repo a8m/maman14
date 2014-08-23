@@ -34,14 +34,14 @@
  * @param *file {code_line}
  * @param num_of_lines {int}
  */
-int first_phase(code_line *file, int num_of_lines);
+int firstPhase(code_line *file, int num_of_lines);
 /* 
  * @description Do the second parsing for the line, resolving the symbols and parsing the operands
  * @param *file {code_line}
  * @param num_of_lines {int}
  * @param file_path {String} argv argument
  */
- int second_parsing(code_line *file, int num_of_lines, char *module_name);
+ int secondPhase(code_line *file, int num_of_lines, char *module_name);
 /* 
  * @description Register the operations code to hash table
  */

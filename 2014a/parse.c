@@ -468,7 +468,7 @@ void parse_command(code_line *c_line, char *symbol)
  * @param *file {code_line}
  * @param num_of_lines {int}
  */
-int first_phase(code_line *file, int num_of_lines)
+int firstPhase(code_line *file, int num_of_lines)
 {
     char *symbol;
 	error_flag = 0;
@@ -680,7 +680,7 @@ void check_addressing(instruction_line *inst_line, int line_number)
  * @param num_of_lines {int}
  * @param file_path {String} argv argument
  */
-int second_parsing(code_line *file, int num_of_lines, char *module_name)
+int secondPhase(code_line *file, int num_of_lines, char *module_name)
 {
 	/* temporary arrays for converting to base 6 */
 	char base_result[MAX_DIGIT + 1], base_result1[MAX_DIGIT +1], file_name[MAX_FILENAME];

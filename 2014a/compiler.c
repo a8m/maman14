@@ -63,10 +63,10 @@ int main(int argc, char **argv)
         /* free the extra line */
         free(file_lines[count].line);
 
-        /* call the first_phase function from parse.c */
-        first_phase(file_lines, count);
-        /* call the second_parsing function from parse.c */
-        second_parsing(file_lines, count, argv[i]);
+        /* call the firstPhase function from parse.c */
+        firstPhase(file_lines, count);
+        /* call the secondPhase function from parse.c */
+        secondPhase(file_lines, count, argv[i]);
         /* free the memory of the file lines */
         free(file_lines);
         /* close the file */
