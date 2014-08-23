@@ -4,15 +4,21 @@
  * author      : Ariel Mashraki, Osnat Izic
  * =========================================================================================
  */
-
-#include <stdio.h>
-#include <stdlib.h>
-#include "hashtable.h"
 #include "compiler.h"
-#include "data.h"
-#include "parse.h"
 
 int main(int argc, char **argv)
+{
+    return startInterpretation(argc, argv);
+}
+
+
+/*
+ * @description called from int main,
+ * start do the files interpretation
+ * @param argc {int} 
+ * @param filesList {Array}
+ */
+int startInterpretation(int argc, char **filesList) 
 {
     int i;
     FILE *fp;
@@ -25,7 +31,7 @@ int main(int argc, char **argv)
         int count = 0, buf_count = BUF_SIZE;
         code_line *file_lines, *tmp;
         /* create the string to open the file and open it */
-        sprintf(file_name, "%s.as", argv[i]);
+        sprintf(file_name, "%s.as", filesList[i]);
         fp = fopen(file_name, "r");
         /* if the files can't be found */
         if (fp == NULL)
@@ -64,7 +70,7 @@ int main(int argc, char **argv)
         /* call the firstPhase function from parse.c */
         firstPhase(file_lines, count);
         /* call the secondPhase function from parse.c */
-        secondPhase(file_lines, count, argv[i]);
+        secondPhase(file_lines, count, filesList[i]);
         /* free the memory of the file lines */
         free(file_lines);
         /* close the file */
