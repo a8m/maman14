@@ -29,7 +29,7 @@ int_hash_node *ihn;
 /* array for entries */
 char *entry_arr[MAX_ARR_SIZE];
 /* counters for entries end externals */
-int entry_counter, extern_counter;
+int counterForEntry, counterForExtern;
 /* general counter, and data and instructions counter */
 int i, ic, dc;
 /* flags for decide if to create the files */
@@ -167,7 +167,7 @@ void parseEntry(code_line *c_line)
 		return;
 	}
 	/* add entry to entries array */
-	entry_arr[entry_counter++] = strdup(c_line->line);
+	entry_arr[counterForEntry++] = strdup(c_line->line);
 	c_line->line = strtok(NULL, " \t\n");
 	/* make sure there is no other words */
 	if (c_line->line)
@@ -191,7 +191,7 @@ void parseExtern(code_line *c_line)
 	}
 	/* add to the extern hashtable with value 0 */
     registerIntToHashTab(c_line->line, '0', exttab);
-	extern_counter++;
+	counterForExtern++;
 	c_line->line = strtok(NULL, " \t\n");
 	/* make sure there is no other words */
 	if (c_line->line)
@@ -474,8 +474,8 @@ int firstPhase(code_line *file, int num_of_lines)
 	flagForError = 0;
 	ic = 0;
 	dc = 0;
-	extern_counter = 0;
-	entry_counter = 0;
+	counterForExtern = 0;
+	counterForEntry = 0;
 
     for (i = 0; i < num_of_lines; i++) /* loop over all the code lines */
     {
@@ -773,13 +773,13 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
         remove(file_name);
     }
 	/* if there was'nt any externs */
-    else if (extern_counter == 0)
+    else if (counterForExtern == 0)
     {
         sprintf(file_name, "%s.ext", module_name);
         remove(file_name);
     }
 	/* if there was'nt any externs */
-    else if (entry_counter == 0)
+    else if (counterForEntry == 0)
     {
         sprintf(file_name, "%s.ent", module_name);
         remove(file_name);
