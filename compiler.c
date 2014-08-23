@@ -2,65 +2,81 @@
  * =========================================================================================
  * name        : maman_14/compiler.c
  * author      : Ariel Mashraki, Osnat Izic
- * email       :
- * description :
  * =========================================================================================
  */
-
-#include "common.h"
+#include "compiler.h"
 
 int main(int argc, char **argv)
 {
-    
-    int i = 0;
+    /* Call interpretation function */
+    return startInterpretation(argc, argv);
+}
+
+
+/*
+ * @description Called from int main,
+ * start do the files interpretation
+ * @param argc {int} 
+ * @param filesList {Array}
+ */
+int startInterpretation(int argc, char **filesList) 
+{
+    int i;
     FILE *fp;
-    char file_name[MAX_FILE_NAME];
+    char fileName[20];
     
-    init_op_table();
-    
-    /* init() ==> run init function() {} */
-    
-    if (argc == 1) {
-        printf(NO_FILES);
-        return FALSE;
-    }
-    /*loop over the file names arguments*/
-    while (++i < argc) {
-        
-        code_line *file_lines;/*array of code_line*/
-        int count = 0;
-        
-        /*create the string to open the file*/
-        sprintf(file_name, "%s", argv[i]);
-        fp = fopen(file_name, "r");
-        
-        /*if there is any problem with the file*/
-        if(!fp) {
-            printf(FILE_ERROR, file_name);
-            return FALSE;
+    registerOperations();
+
+    for (i = 1; i < argc; i++)
+    {
+        int count = 0, buf_count = BUF_SIZE;
+        codeLineObject *numOfLines, *tmp;
+        /* create the string to open the file and open it */
+        sprintf(fileName, "%s.as", filesList[i]);
+        fp = fopen(fileName, "r");
+        /* if the files can't be found */
+        if (fp == NULL)
+        {
+            printf("ERROR: can't find file %s\n, Please insert files name without suffix .as", fileName);
+            return EXIT;
         }
         
         /* allocate memory for reading the files */
-        file_lines =  malloc(sizeof(code_line) * MAX_LINES);
-        file_lines[count].line = malloc(sizeof(char) * MAX_LINE_LENGTH);
-        
-		/* read the file into the array */
-        while (fgets(file_lines[count].line, MAX_LINE_LENGTH, fp)) {
-            
-            file_lines[count].line_number = count + 1;
-            file_lines[++count].line = malloc(sizeof(char) * (MAX_LINE_LENGTH));
-        } /* END: read current line */
-        
-        /*free the extra line */
-        free(file_lines[count].line);
-        
-        /* call the first_parsing function from parse.c */
-        firstParsing(file_lines, count);
-        
-    }/* END: read argc */
-    
-    
-    
-    return EXIT;
-}
+        numOfLines =  malloc(sizeof(codeLineObject) * BUF_SIZE);
+        numOfLines[count].line = malloc(sizeof(char) * MAX_LINE);
+        /* read the file into the array */
+        while (fgets(numOfLines[count].line, MAX_LINE, fp))
+        {
+             /* if there is a need for reallocation */
+            if (count == buf_count)
+            {
+                buf_count += BUF_SIZE;
+                tmp = realloc(numOfLines, sizeof(codeLineObject) * buf_count);
+                if (tmp)
+                {
+                    numOfLines = tmp;
+                }
+                else
+                {
+                    printf("%s", "ERROR: reallocating");
+                    return EXIT;
+                }
+            }
+            numOfLines[count].line_number = count + 1;
+            numOfLines[++count].line = malloc(sizeof(char) * MAX_LINE);
+        }
+        /* free the extra line */
+        free(numOfLines[count].line);
 
+        /* call the firstPhase function from parse.c */
+        firstPhase(numOfLines, count);
+        /* call the secondPhase function from parse.c */
+        secondPhase(numOfLines, count, filesList[i]);
+        /* free the memory of the file lines */
+        free(numOfLines);
+        /* close the file */
+        fclose(fp);
+
+    }
+    return FALSE;
+}

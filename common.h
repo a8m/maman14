@@ -1,36 +1,49 @@
 /*
  * =========================================================================================
- * name        : maman_14/common.h
+ * name        : maman_14/common.c
  * author      : Ariel Mashraki, Osnat Izic
- * email       :
- * description :
  * =========================================================================================
  */
 
 #ifndef COMMON_H_
 #define COMMON_H_
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include "parser.h"
-#include "utils.h"
+/* 
+ * @description trim white space from the begining of the string, 
+ * incrementing the original pointer to the first place that is not space 
+ * @param str {String}
+ */
+void trim(char **str);
 
-/* >>>>>>>>>>>>>>>>>>>>>>>>> GLOBAL DEFINE >>>>>>>>>>>>>>>>>>>>>>>>> */
-#define EXIT                        1
-#define TRUE                        1
-#define FALSE                       0
-#define MAX_FILE_NAME               20
-#define MAX_LINE_LENGTH             80
-#define MAX_LINES                   100
-#define MAX_ARR_SIZE                1000
+/* 
+ * @description copy the given string in the argument;
+ * @param str {String}
+ * @return copied string {String}
+ */
+ char *strCopy(const char *str);
+/* 
+ * @descipriton converting int to ant requested base, if pad is '1', the function will add leading '0' to the number 
+ * @param number {int}
+ * @param base {int}
+ * @param str {String}
+ * @param pad {int}
+ * @return pointer to the char in the first of the converted number
+ */
+char *baseConvertor(int num, int base, char *result, int pad);
 
+/* 
+ * @descipriton MACRO - PRINT_ERROR printing 
+ * @param msg {String}
+ * @param line number {int}
+ * @example[usage]
+ * PRINT_ERROR("Hi, I'm an PRINT_ERROR message", 3)
+ */
+#define PRINT_ERROR(MSG,LINE) fprintf(stderr, "PRINT_ERROR in line %d: %s\n", LINE, MSG);
 
-/* >>>>>>>>>>>>>>>>>>>>>>>>>> FILE ERRORS >>>>>>>>>>>>>>>>>>>>>>>>>> */
-#define NO_FILES                    "Error: You have to add an input \'.as\' files as an arguments\n"
-#define FILE_ERROR                  "Error: Can't find file %s\n"
-#define LABEL_ERR                   "Error: Symbols should start with uppercase or lowercase char\n"
-
+/* 
+ * max digit for the baseConvertor function 
+ */
+#define MAX_DIGIT 8
 
 #endif
+
