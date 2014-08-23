@@ -19,11 +19,11 @@ typedef struct int_nlist { /* table entry: */
 
 #define HASHSIZE 200
 
-/* string_install: put (name, defn) in hashtab */
-string_hash_node *string_install(char *name, char *defn, string_hash_node *hashtab[]);
-/* string_lookup: look for s in hashtab */
-string_hash_node *string_lookup(char *s, string_hash_node *hashtab[]);
-/* int_install: put (name, defn) in hashtab */
-int_hash_node *int_install(char *name, int defn, int_hash_node *hashtab[]);
-/* int_lookup: look for s in hashtab */
-int_hash_node *int_lookup(char *s, int_hash_node *hashtab[]);
+/* registerStringToHashTab: put (name, defn) in hashtab */
+string_hash_node *registerStringToHashTab(char *name, char *defn, string_hash_node *hashtab[]);
+/* fetchStringFromHashTab: look for s in hashtab */
+string_hash_node *fetchStringFromHashTab(char *s, string_hash_node *hashtab[]);
+/* registerIntToHashTab: put (name, defn) in hashtab */
+int_hash_node *registerIntToHashTab(char *name, int defn, int_hash_node *hashtab[]);
+/* fetchIntFromHashTab: look for s in hashtab */
+int_hash_node *fetchIntFromHashTab(char *s, int_hash_node *hashtab[]);

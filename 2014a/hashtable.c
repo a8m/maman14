@@ -19,8 +19,8 @@ unsigned int hash(char *s)
     return hashval % HASHSIZE;
 }
 
-/* string_lookup: look for s in hashtab */
-string_hash_node *string_lookup(char *s, string_hash_node *hashtab[])
+/* fetchStringFromHashTab: look for s in hashtab */
+string_hash_node *fetchStringFromHashTab(char *s, string_hash_node *hashtab[])
 {
     string_hash_node *np;
     for (np = hashtab[hash(s)]; np != NULL; np = np->next)
@@ -29,8 +29,8 @@ string_hash_node *string_lookup(char *s, string_hash_node *hashtab[])
     return NULL; /* not found */
 }
 
-/* int_lookup: look for s in hashtab */
-int_hash_node *int_lookup(char *s, int_hash_node *hashtab[])
+/* fetchIntFromHashTab: look for s in hashtab */
+int_hash_node *fetchIntFromHashTab(char *s, int_hash_node *hashtab[])
 {
     int_hash_node *np;
     for (np = hashtab[hash(s)]; np != NULL; np = np->next)
@@ -39,12 +39,12 @@ int_hash_node *int_lookup(char *s, int_hash_node *hashtab[])
     return NULL; /* not found */
 }
 
-/* string_install: put (name, defn) in hashtab */
-string_hash_node *string_install(char *name, char *defn, string_hash_node *hashtab[])
+/* registerStringToHashTab: put (name, defn) in hashtab */
+string_hash_node *registerStringToHashTab(char *name, char *defn, string_hash_node *hashtab[])
 {
     string_hash_node *np;
     unsigned int hashval;
-    if ((np = string_lookup(name, hashtab)) == NULL) { /* not found */
+    if ((np = fetchStringFromHashTab(name, hashtab)) == NULL) { /* not found */
         np = (string_hash_node *) malloc(sizeof(*np));
         if (np == NULL || (np->name = strdup(name)) == NULL)
             return NULL;
@@ -58,12 +58,12 @@ string_hash_node *string_install(char *name, char *defn, string_hash_node *hasht
     return np;
 }
 
-/* int_install: put (name, defn) in hashtab */
-int_hash_node *int_install(char *name, int defn, int_hash_node *hashtab[])
+/* registerIntToHashTab: put (name, defn) in hashtab */
+int_hash_node *registerIntToHashTab(char *name, int defn, int_hash_node *hashtab[])
 {
     int_hash_node *np;
     unsigned int hashval;
-    if ((np = int_lookup(name, hashtab)) == NULL) { /* not found */
+    if ((np = fetchIntFromHashTab(name, hashtab)) == NULL) { /* not found */
         np = (int_hash_node *) malloc(sizeof(*np));
         if (np == NULL || (np->name = strdup(name)) == NULL)
             return NULL;

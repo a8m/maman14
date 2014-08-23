@@ -65,6 +65,6 @@ data_line bline2data(instruction_line bl);
 /* this function returning data_line containing the int in the argument with the sign bit */
 data_line num2data(int num);
 /* this function clearing the values of an instruction line */
-void init_instruction_line(instruction_line *il);
+void registerInstructionLine(instruction_line *il);
 /* after allocating memory, the data need to be clear from garbage */
-void init_data_line(data_line *dl);
+void registerDataLine(data_line *dl);

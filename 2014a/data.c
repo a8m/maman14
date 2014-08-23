@@ -11,7 +11,7 @@
 unsigned char mask_by_width[] = {0x0, 0x1, 0x3, 0x7, 0xF, 0x1F, 0x3F, 0x7F, 0xFF};
 
 /* after allocating memory, the data need to be clear from garbage */
-void init_data_line(data_line *dl)
+void registerDataLine(data_line *dl)
 {
     dl->data = 0;
 }
@@ -20,7 +20,7 @@ void init_data_line(data_line *dl)
 data_line char2data(char ch)
 {
     data_line tmp;
-    init_data_line(&tmp);
+    registerDataLine(&tmp);
     tmp.data = ch;
     return tmp;
 }
@@ -29,7 +29,7 @@ data_line char2data(char ch)
 data_line bline2data(instruction_line bl)
 {
     data_line tmp;
-    init_data_line(&tmp);
+    registerDataLine(&tmp);
 
     tmp.data |= (mask_by_width[COMB_WIDTH]   << COMB_OFFSET)   & (bl.comb << COMB_OFFSET);
     tmp.data |= (mask_by_width[DREG_WIDTH]   << DREG_OFFSET)   & (bl.dest_reg << DREG_OFFSET);
@@ -49,7 +49,7 @@ data_line num2data(int num)
 {
     unsigned int bit_mask_19 = 0x7FFFF;
     data_line tmp;
-    init_data_line(&tmp);
+    registerDataLine(&tmp);
 
     if (num >= 0)
     {
@@ -66,7 +66,7 @@ data_line num2data(int num)
 }
 
 /* this function clearing the values of an instruction line */
-void init_instruction_line(instruction_line *il)
+void registerInstructionLine(instruction_line *il)
 {
     il->comb = 0;
     il->dest_reg = 0;
