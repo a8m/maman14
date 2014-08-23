@@ -790,7 +790,7 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
 /* 
  * @description Register the operations code to hash table
  */
-void init_op_table()
+void registerOperations()
 {
     ihn = int_install("mov" , MOV, optab);
     ihn = int_install("cmp" , CMP, optab);

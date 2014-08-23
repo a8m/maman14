@@ -19,7 +19,7 @@ int main(int argc, char **argv)
     char file_name[20];
     
     /* call the function to intialize the opcode hashtable */
-    init_op_table();
+    registerOperations();
 
     /* loop over the file names arguments */
     for (i = 1; i < argc; i++)

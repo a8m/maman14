@@ -45,4 +45,4 @@ int firstPhase(code_line *file, int num_of_lines);
 /* 
  * @description Register the operations code to hash table
  */
-void init_op_table();
+void registerOperations();
