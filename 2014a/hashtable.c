@@ -33,10 +33,11 @@ string_hash_node *fetchStringFromHashTab(char *s, string_hash_node *hashtab[])
 int_hash_node *fetchIntFromHashTab(char *s, int_hash_node *hashtab[])
 {
     int_hash_node *np;
-    for (np = hashtab[hash(s)]; np != NULL; np = np->next)
+    for (np = hashtab[hash(s)]; np != NULL; np = np->next) {
         if (strcmp(s, np->name) == 0)
-            return np; /* found */
-    return NULL; /* not found */
+            return np; /* found node*/
+    }
+    return NULL; /* not found node*/
 }
 
 /* registerStringToHashTab: put (name, defn) in hashtab */

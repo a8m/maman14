@@ -25,7 +25,7 @@ static int_hash_node *extrnalCmdList[HASHSIZE];
 /* linked list for the opcode replacements */
 static int_hash_node *operationList[HASHSIZE];
 /* temporary node for lookuping in the linkde lists */
-int_hash_node *tempNode;
+int_hash_node *tempNode, *tempDynamicNode;
 /* array for entries */
 char *entryArrayList[MAX_ARR_SIZE];
 /* counters for entries end externals */
@@ -501,9 +501,9 @@ int firstPhase(code_line *file, int num_of_lines)
 /* this function is for the second parsing, parsing each operand */
 void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, int org_line_num)
 {
-	/* 2 temporary arrays to get the base 6 results */
-	char base_result[MAX_DIGIT + 1], base_result1[MAX_DIGIT + 1];
-	int sign = 1, sum = 0;
+	/* 2 temporary arrays to get the base 8 results */
+	char base_result[MAX_DIGIT + 1], base_result1[MAX_DIGIT + 1], tempChar[10];
+	int sign = 1, sum = 0, cIndex = 0;
 	/* check what tyoe of operand */
 	switch (addr)
 	{
@@ -588,9 +588,20 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
             for (;op[0] != '!'; op++) {};
             op++;
 
-            sum *= tempNode->defn;
-            for (;op[0] != '}'; op++) {};
-
+            for (;op[0] != '}'; op++) {
+            	tempChar[cIndex]= op[0];
+				cIndex++;
+            };
+            tempChar[cIndex] = '\0';
+            tempDynamicNode = fetchIntFromHashTab(tempChar, instructionsSymbolsList);
+           	if(tempDynamicNode == NULL) 
+           	{
+           		sum *= tempNode->defn;
+           	} 
+           	else
+           	{
+           		sum *= tempDynamicNode->defn;
+           	}
 			/* make sure it ends with ) */
             if (!(op[0] == '}'))
             {

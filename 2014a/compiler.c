@@ -8,12 +8,13 @@
 
 int main(int argc, char **argv)
 {
+    /* Call interpretation function */
     return startInterpretation(argc, argv);
 }
 
 
 /*
- * @description called from int main,
+ * @description Called from int main,
  * start do the files interpretation
  * @param argc {int} 
  * @param filesList {Array}
@@ -36,7 +37,7 @@ int startInterpretation(int argc, char **filesList)
         /* if the files can't be found */
         if (fp == NULL)
         {
-            printf("PRINT_ERROR: can't find file %s\n, Please insert files name without suffix .as", file_name);
+            printf("ERROR: can't find file %s\n, Please insert files name without suffix .as", file_name);
             return EXIT;
         }
         
@@ -57,7 +58,7 @@ int startInterpretation(int argc, char **filesList)
                 }
                 else
                 {
-                    printf("%s", "PRINT_ERROR reallocating");
+                    printf("%s", "ERROR: reallocating");
                     return EXIT;
                 }
             }
