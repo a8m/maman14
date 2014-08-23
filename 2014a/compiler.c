@@ -18,10 +18,8 @@ int main(int argc, char **argv)
     FILE *fp;
     char file_name[20];
     
-    /* call the function to intialize the opcode hashtable */
     registerOperations();
 
-    /* loop over the file names arguments */
     for (i = 1; i < argc; i++)
     {
         int count = 0, buf_count = BUF_SIZE;
@@ -32,8 +30,8 @@ int main(int argc, char **argv)
         /* if the files can't be found */
         if (fp == NULL)
         {
-            printf("Error: can't find file %s\n", file_name);
-            return -1;
+            printf("Error: can't find file %s\n, Please insert files name without suffix .as", file_name);
+            return EXIT;
         }
         
         /* allocate memory for reading the files */
@@ -54,7 +52,7 @@ int main(int argc, char **argv)
                 else
                 {
                     printf("%s", "error reallocating");
-                    return -1;
+                    return EXIT;
                 }
             }
             file_lines[count].line_number = count + 1;
@@ -73,5 +71,5 @@ int main(int argc, char **argv)
         fclose(fp);
 
     }
-    return 0;
+    return FALSE;
 }

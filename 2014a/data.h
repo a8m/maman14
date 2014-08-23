@@ -4,6 +4,10 @@
  * author      : Ariel Mashraki, Osnat Izic
  * =========================================================================================
  */
+
+#define EXIT -1
+#define FALSE 0
+ 
 #define COMB_WIDTH 2
 #define DREG_WIDTH 3
 #define DADDR_WIDTH 2
