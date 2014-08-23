@@ -44,27 +44,27 @@ typedef struct instrline {
     unsigned int type      : TYPE_WIDTH;
     unsigned int dbl       : DBL_WIDTH;
     unsigned int rsvd      : RSVD_WIDTH;
-} instruction_line;
+} instructionLineObject;
 
 /* type for a whole line, with relevant fields helping the parsing */
 typedef struct cline {
     char *line;
-    instruction_line *instruction;
+    instructionLineObject *instruction;
     unsigned char repeat;
     unsigned int line_number;
     char *src_opr;
     char *dest_opr;
     char done;
-} code_line;
+} codeLineObject;
 
 
 /* this function returning data_line containing the char in the argument */
 data_line char2data(char ch);
 /* this function returning data_line containing the (boolean) instruction line in the argument */
-data_line bline2data(instruction_line bl);
+data_line bline2data(instructionLineObject bl);
 /* this function returning data_line containing the int in the argument with the sign bit */
 data_line num2data(int num);
 /* this function clearing the values of an instruction line */
-void registerInstructionLine(instruction_line *il);
+void registerInstructionLine(instructionLineObject *il);
 /* after allocating memory, the data need to be clear from garbage */
 void registerDataLine(data_line *dl);

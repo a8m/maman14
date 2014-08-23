@@ -31,7 +31,7 @@ data_line char2data(char ch)
 /* 
  * @description returning data_line containing the (boolean) instruction line in the argument 
  */
-data_line bline2data(instruction_line bl)
+data_line bline2data(instructionLineObject bl)
 {
     data_line tmp;
     registerDataLine(&tmp);
@@ -75,7 +75,7 @@ data_line num2data(int num)
 /* 
  * @description clearing the values of an instruction line 
  */
-void registerInstructionLine(instruction_line *il)
+void registerInstructionLine(instructionLineObject *il)
 {
     il->comb = 0;
     il->dest_reg = 0;
@@ -85,6 +85,5 @@ void registerInstructionLine(instruction_line *il)
     il->opcode = 0;
     il->type = 0;
     il->dbl = 0;
-    il->rsvd = 0; /***?***/
+    il->rsvd = 0; 
 }
-

@@ -36,7 +36,7 @@ int i, ic, dc;
 char flagForError = 0, flagForExtern = 0, flagForEntry = 0;
 
 /* this function is checking if there is a symbol. if yes, its returning a pointer to it, if not, returns null */
-char *fetchSymbol(code_line *codeLine)
+char *fetchSymbol(codeLineObject *codeLine)
 {
     char *tmp = (codeLine->line);
 	/* while its not end of line */
@@ -62,7 +62,7 @@ char *fetchSymbol(code_line *codeLine)
 }
 
 /* this function extract the data from a data command */
-void parseData(code_line *codeLine)
+void parseData(codeLineObject *codeLine)
 {
     int sign;
     int sum;
@@ -120,7 +120,7 @@ void parseData(code_line *codeLine)
 }
 
 /* this function extract the string from a string command */
-void parseString(code_line *codeLine)
+void parseString(codeLineObject *codeLine)
 {
     trim(&(codeLine->line));
 	/* make sure its starts with " */
@@ -155,7 +155,7 @@ void parseString(code_line *codeLine)
 }
 
 /* this function extract the entry from a entry command */
-void parseEntry(code_line *codeLine)
+void parseEntry(codeLineObject *codeLine)
 {
 	/* skip on tabs and spaces */
 	codeLine->line = strtok(codeLine->line, " \t\n");
@@ -178,7 +178,7 @@ void parseEntry(code_line *codeLine)
 }
 
 /* this function extract the entry from a entry command */
-void parseExtern(code_line *codeLine)
+void parseExtern(codeLineObject *codeLine)
 {
 	/* skip on tabs and spaces */
 	codeLine->line = strtok(codeLine->line, " \t\n");
@@ -220,7 +220,7 @@ char checkExpOperands(char *s)
 }
 
 /* this function parsing the instruction given in the line */
-void parsingInstruction(code_line *codeLine)
+void parsingInstruction(codeLineObject *codeLine)
 {
 	/* count how many instruction lines this line using, including repeats */
     int localCounter = 0;
@@ -244,7 +244,7 @@ void parsingInstruction(code_line *codeLine)
 	}
 	/* use the auxilary function to count the expected operands */
 	numOfValidOperands = checkExpOperands(codeLine->line);
-	codeLine->instruction = (instruction_line *) malloc(sizeof(instruction_line) * 8);
+	codeLine->instruction = (instructionLineObject *) malloc(sizeof(instructionLineObject) * 8);
 	/* clear the instruction line */
     registerInstructionLine(codeLine->instruction);
     localCounter++;
@@ -414,7 +414,7 @@ void parsingInstruction(code_line *codeLine)
 }
 
 /* this function parsing the commands line (string, data, extern and entry) */
-void parsingCmd(code_line *codeLine, char *symbol)
+void parsingCmd(codeLineObject *codeLine, char *symbol)
 {
 	/* if string */
 	if (strncmp(codeLine->line, ".string", sizeof(".string") - 1) == 0)
@@ -464,10 +464,10 @@ void parsingCmd(code_line *codeLine, char *symbol)
 /* 
  * @description Do the first parsing to the line, 
  * and leaving for the second parsing to check for the symbols addresses and parsing the operands 
- * @param *file {code_line}
+ * @param *file {codeLineObject}
  * @param numberOfLine {int}
  */
-int firstPhase(code_line *file, int numberOfLine)
+int firstPhase(codeLineObject *file, int numberOfLine)
 {
     char *symbol;
 	flagForError = 0;
@@ -625,7 +625,7 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 }
 
 /* this function checks if the given addressing is valid */
-void checkForAdress(instruction_line *inst_line, int line_number)
+void checkForAdress(instructionLineObject *inst_line, int line_number)
 {
     switch(inst_line->opcode)
     {
@@ -686,11 +686,11 @@ void checkForAdress(instruction_line *inst_line, int line_number)
 
 /* 
  * @description Do the second parsing for the line, resolving the symbols and parsing the operands
- * @param *file {code_line}
+ * @param *file {codeLineObject}
  * @param numberOfLine {int}
  * @param file_path {String} argv argument
  */
-int secondPhase(code_line *file, int numberOfLine, char *filePath)
+int secondPhase(codeLineObject *file, int numberOfLine, char *filePath)
 {
 	/* temporary arrays for converting to base 8 */
 	char resultBaseArray[MAX_DIGIT + 1], tempBaseArray[MAX_DIGIT +1], fileName[MAX_FILENAME];

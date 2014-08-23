@@ -30,7 +30,7 @@ int startInterpretation(int argc, char **filesList)
     for (i = 1; i < argc; i++)
     {
         int count = 0, buf_count = BUF_SIZE;
-        code_line *file_lines, *tmp;
+        codeLineObject *numOfLines, *tmp;
         /* create the string to open the file and open it */
         sprintf(fileName, "%s.as", filesList[i]);
         fp = fopen(fileName, "r");
@@ -42,19 +42,19 @@ int startInterpretation(int argc, char **filesList)
         }
         
         /* allocate memory for reading the files */
-        file_lines =  malloc(sizeof(code_line) * BUF_SIZE);
-        file_lines[count].line = malloc(sizeof(char) * MAX_LINE);
+        numOfLines =  malloc(sizeof(codeLineObject) * BUF_SIZE);
+        numOfLines[count].line = malloc(sizeof(char) * MAX_LINE);
         /* read the file into the array */
-        while (fgets(file_lines[count].line, MAX_LINE, fp))
+        while (fgets(numOfLines[count].line, MAX_LINE, fp))
         {
              /* if there is a need for reallocation */
             if (count == buf_count)
             {
                 buf_count += BUF_SIZE;
-                tmp = realloc(file_lines, sizeof(code_line) * buf_count);
+                tmp = realloc(numOfLines, sizeof(codeLineObject) * buf_count);
                 if (tmp)
                 {
-                    file_lines = tmp;
+                    numOfLines = tmp;
                 }
                 else
                 {
@@ -62,18 +62,18 @@ int startInterpretation(int argc, char **filesList)
                     return EXIT;
                 }
             }
-            file_lines[count].line_number = count + 1;
-            file_lines[++count].line = malloc(sizeof(char) * MAX_LINE);
+            numOfLines[count].line_number = count + 1;
+            numOfLines[++count].line = malloc(sizeof(char) * MAX_LINE);
         }
         /* free the extra line */
-        free(file_lines[count].line);
+        free(numOfLines[count].line);
 
         /* call the firstPhase function from parse.c */
-        firstPhase(file_lines, count);
+        firstPhase(numOfLines, count);
         /* call the secondPhase function from parse.c */
-        secondPhase(file_lines, count, filesList[i]);
+        secondPhase(numOfLines, count, filesList[i]);
         /* free the memory of the file lines */
-        free(file_lines);
+        free(numOfLines);
         /* close the file */
         fclose(fp);
 
