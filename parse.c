@@ -50,7 +50,7 @@ char *fetchSymbol(codeLineObject *codeLine)
 			/* make sure its starts with a char */
             if (!isalpha(tmp[0]))
             {
-                PRINT_ERROR("Symbol should start with a char", codeLine->line_number)
+                PRINT_ERROR("Symbol should start with a char", codeLine->lineNumber)
                 flagForError = 1;
             }
             return tmp;
@@ -81,7 +81,7 @@ void parseData(codeLineObject *codeLine)
 		/* make sure its start with digit */
         if (!isdigit((*codeLine).line[0]))
         {
-            PRINT_ERROR("Wrong .data format, expecting number", (*codeLine).line_number)
+            PRINT_ERROR("Wrong .data format, expecting number", (*codeLine).lineNumber)
 			flagForError = 1;
         }
         else
@@ -113,7 +113,7 @@ void parseData(codeLineObject *codeLine)
 	/* if the line ended and we still waiting for another number */
 	if (expecting_number == 1)
 	{
-		PRINT_ERROR("Expecting number after \',\'", (*codeLine).line_number)
+		PRINT_ERROR("Expecting number after \',\'", (*codeLine).lineNumber)
 		flagForError = 1;
 	}
 
@@ -126,7 +126,7 @@ void parseString(codeLineObject *codeLine)
 	/* make sure its starts with " */
     if (!(codeLine->line[0] == '\"'))
     {
-        PRINT_ERROR(".string argument must start with \"", (*codeLine).line_number)
+        PRINT_ERROR(".string argument must start with \"", (*codeLine).lineNumber)
 		flagForError = 1;
         return;
     }
@@ -147,7 +147,7 @@ void parseString(codeLineObject *codeLine)
     }
     else
     {
-        PRINT_ERROR(".string argument must end with \"", (*codeLine).line_number)
+        PRINT_ERROR(".string argument must end with \"", (*codeLine).lineNumber)
 		flagForError = 1;
         return;
     }
@@ -162,7 +162,7 @@ void parseEntry(codeLineObject *codeLine)
 	/* if there is no entry */
 	if (!codeLine->line)
 	{
-        PRINT_ERROR("No value found after entry command", (*codeLine).line_number)
+        PRINT_ERROR("No value found after entry command", (*codeLine).lineNumber)
 		flagForError = 1;
 		return;
 	}
@@ -172,7 +172,7 @@ void parseEntry(codeLineObject *codeLine)
 	/* make sure there is no other words */
 	if (codeLine->line)
 	{
-        PRINT_ERROR("Unexpected words in entry command", (*codeLine).line_number)
+        PRINT_ERROR("Unexpected words in entry command", (*codeLine).lineNumber)
 		flagForError = 1;
 	}
 }
@@ -185,7 +185,7 @@ void parseExtern(codeLineObject *codeLine)
 	/* if there is no extern */
 	if (!codeLine->line)
 	{
-        PRINT_ERROR("No value found after extern command", (*codeLine).line_number)
+        PRINT_ERROR("No value found after extern command", (*codeLine).lineNumber)
 		flagForError = 1;
 		return;
 	}
@@ -196,7 +196,7 @@ void parseExtern(codeLineObject *codeLine)
 	/* make sure there is no other words */
 	if (codeLine->line)
 	{
-        PRINT_ERROR("Unexpected words in extern command", (*codeLine).line_number)
+        PRINT_ERROR("Unexpected words in extern command", (*codeLine).lineNumber)
 		flagForError = 1;
 	}
 }
@@ -222,7 +222,7 @@ char checkExpOperands(char *s)
 /* this function parsing the instruction given in the line */
 void parsingInstruction(codeLineObject *codeLine)
 {
-	/* count how many instruction lines this line using, including repeats */
+	/* count how many instruction lines this line using, including oprRepeats */
     int localCounter = 0;
 	char numOfValidOperands;
 	/* isolate the opcode */
@@ -238,7 +238,7 @@ void parsingInstruction(codeLineObject *codeLine)
             codeLine->done = 1;
             return;
         }
-        PRINT_ERROR("Ilegal instruction", (*codeLine).line_number)
+        PRINT_ERROR("Ilegal instruction", (*codeLine).lineNumber)
 		flagForError = 1;
 		return;
 	}
@@ -267,7 +267,7 @@ void parsingInstruction(codeLineObject *codeLine)
 			(codeLine->line)++;
 			if (!(codeLine->line[0] == '/'))
 			{
-				PRINT_ERROR("Expecting comb values after type 1", (*codeLine).line_number)
+				PRINT_ERROR("Expecting comb values after type 1", (*codeLine).lineNumber)
 				flagForError = 1;
 				return;
 			}
@@ -280,7 +280,7 @@ void parsingInstruction(codeLineObject *codeLine)
 					codeLine->instruction->comb |= 2; /* left bit of comb should be 1 */
 					break;
 				default:
-					PRINT_ERROR("Ilegal value for comb", (*codeLine).line_number)
+					PRINT_ERROR("Ilegal value for comb", (*codeLine).lineNumber)
 					flagForError = 1;
 					return;
 			}
@@ -288,7 +288,7 @@ void parsingInstruction(codeLineObject *codeLine)
 			/* expecting / */
 			if (!(codeLine->line[0] == '/'))
 			{
-				PRINT_ERROR("Expecting cobm values after type 1", (*codeLine).line_number)
+				PRINT_ERROR("Expecting cobm values after type 1", (*codeLine).lineNumber)
 				flagForError = 1;
 				return;
 			}
@@ -301,35 +301,35 @@ void parsingInstruction(codeLineObject *codeLine)
 					codeLine->instruction->comb |= 1; /* right bit of comb should be 1 */
 					break;
 				default:
-					PRINT_ERROR("Ilegal value for comb", (*codeLine).line_number)
+					PRINT_ERROR("Ilegal value for comb", (*codeLine).lineNumber)
 					flagForError = 1;
 					return;
 			}
             break;
 		default:
-			PRINT_ERROR("Ilegal value for comb", (*codeLine).line_number)
+			PRINT_ERROR("Ilegal value for comb", (*codeLine).lineNumber)
 			flagForError = 1;
 			return;
 	}
 	(codeLine->line)++;
 	if (!(codeLine->line[0] == ','))
 	{
-		PRINT_ERROR("Expecting ',' after type and comb values", (*codeLine).line_number)
+		PRINT_ERROR("Expecting ',' after type and comb values", (*codeLine).lineNumber)
 		flagForError = 1;
 		return;
 	}
 	(codeLine->line)++;
 
-    codeLine->repeat = codeLine->line[0] - '0';
-   	/* check for repeat number, dbl bit */
-    if(codeLine->repeat < 0 || codeLine->repeat > 1)
+    codeLine->oprRepeat = codeLine->line[0] - '0';
+   	/* check for oprRepeat number, dbl bit */
+    if(codeLine->oprRepeat < 0 || codeLine->oprRepeat > 1)
 	{
-		PRINT_ERROR("Invalid command dbl value. Valid values are 0,1", (*codeLine).line_number);
+		PRINT_ERROR("Invalid command dbl value. Valid values are 0,1", (*codeLine).lineNumber);
 		return;
 	}
 	else
 	{
-		codeLine->instruction->dbl = codeLine->repeat;
+		codeLine->instruction->dbl = codeLine->oprRepeat;
 	}
 	(codeLine->line)++;
 	trim(&(codeLine->line));
@@ -341,12 +341,12 @@ void parsingInstruction(codeLineObject *codeLine)
         if (numOfValidOperands == 1)
         {
 			/* its the first operand */
-            codeLine->src_opr = strCopy(codeLine->line);
+            codeLine->srcOpr = strCopy(codeLine->line);
         }
         else
         {
 			/* its the second operand */
-            codeLine->dest_opr = strCopy(codeLine->line);
+            codeLine->destOpr = strCopy(codeLine->line);
         }
 		/* check for the type of the oprands and decide how much ic should be incremented */
         switch (codeLine->line[0])
@@ -369,13 +369,13 @@ void parsingInstruction(codeLineObject *codeLine)
                     if (numOfValidOperands == 1)
                     {
                         codeLine->instruction->src_reg = codeLine->line[0] - '0';
-                        free(codeLine->src_opr);
+                        free(codeLine->srcOpr);
                         codeLine->instruction->src_addr = 3;
                     }
                     else
                     {
                         codeLine->instruction->dest_reg = codeLine->line[0] - '0';
-                        free(codeLine->dest_opr);
+                        free(codeLine->destOpr);
                         codeLine->instruction->dest_addr = 3;
                     }
                     break;
@@ -409,7 +409,7 @@ void parsingInstruction(codeLineObject *codeLine)
 		}
         codeLine->line = strtok(NULL, " \t,\n");
 	}
-    ic += (localCounter * codeLine->repeat);
+    ic += (localCounter * codeLine->oprRepeat);
 	
 }
 
@@ -455,7 +455,7 @@ void parsingCmd(codeLineObject *codeLine, char *symbol)
 	}
 	else
 	{
-		PRINT_ERROR("Unrecognized command", (*codeLine).line_number)
+		PRINT_ERROR("Unrecognized command", (*codeLine).lineNumber)
 		flagForError = 1;
 	}
     codeLine->done = 1;
@@ -582,7 +582,7 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
                 PRINT_ERROR("Can't find symbol in symbol table or in extern table", org_line_num)
                 flagForError = 1;
             }
-            op[i] = '{'; /* put back { char for the case this line will repeat */
+            op[i] = '{'; /* put back { char for the case this line will oprRepeat */
 			/* seek for ! char */
             for (;op[0] != '!'; op++) {};
             op++;
@@ -625,7 +625,7 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 }
 
 /* this function checks if the given addressing is valid */
-void checkForAdress(instructionLineObject *inst_line, int line_number)
+void checkForAdress(instructionLineObject *inst_line, int lineNumber)
 {
     switch(inst_line->opcode)
     {
@@ -634,7 +634,7 @@ void checkForAdress(instructionLineObject *inst_line, int line_number)
         case SUB:
             if (inst_line->dest_addr == 0)
             {
-                PRINT_ERROR("Ilegal addressing",line_number)
+                PRINT_ERROR("Ilegal addressing",lineNumber)
                 flagForError = 1;
             }
             break;
@@ -647,7 +647,7 @@ void checkForAdress(instructionLineObject *inst_line, int line_number)
         case RED:
             if ((inst_line->dest_addr == 0) || (inst_line->src_addr != 0))
             {
-                PRINT_ERROR("Ilegal addressing",line_number)
+                PRINT_ERROR("Ilegal addressing",lineNumber)
                 flagForError = 1;
             }
             break;
@@ -655,28 +655,28 @@ void checkForAdress(instructionLineObject *inst_line, int line_number)
         case STOP:
             if ((inst_line->dest_addr != 0) || (inst_line->src_addr != 0))
             {
-                PRINT_ERROR("Ilegal addressing",line_number)
+                PRINT_ERROR("Ilegal addressing",lineNumber)
                 flagForError = 1;
             }
             break;
         case LEA:
             if ((inst_line->dest_addr == 0) || (inst_line->src_addr == 0))
             {
-                PRINT_ERROR("Ilegal addressing",line_number)
+                PRINT_ERROR("Ilegal addressing",lineNumber)
                 flagForError = 1;
             }
             break;
         case PRN:
             if (inst_line->src_addr != 0)
             {
-                PRINT_ERROR("Ilegal addressing",line_number)
+                PRINT_ERROR("Ilegal addressing",lineNumber)
                 flagForError = 1;
             }
             break;
         case JSR:
             if ((inst_line->dest_addr != 1) || (inst_line->src_addr != 0))
             {
-                PRINT_ERROR("Ilegal addressing",line_number)
+                PRINT_ERROR("Ilegal addressing",lineNumber)
                 flagForError = 1;
             }
             break;
@@ -713,24 +713,24 @@ int secondPhase(codeLineObject *file, int numberOfLine, char *filePath)
         if (!file[i].done)
         {
 			/* check if the addressing is valid */
-            checkForAdress(file[i].instruction, file[i].line_number);
-			/* parse the operands * repeat times */
-            for (j = 0; j < file[i].repeat; j++)
+            checkForAdress(file[i].instruction, file[i].lineNumber);
+			/* parse the operands * oprRepeat times */
+            for (j = 0; j < file[i].oprRepeat; j++)
             {
 				/* write to file the actual instruction */
                 fprintf(obj, "%s\t%s\t%c\n",baseConvertor(line_count + LINE_OFFSET, BASE, resultBaseArray, NO_PAD) , baseConvertor(bline2data(*(file[i].instruction)).data, BASE, tempBaseArray, PAD), 'A');
                 line_count++;
 				/* if there is source operand */
-                if (file[i].src_opr)
+                if (file[i].srcOpr)
                 {
 					/* use the auxilary function to parse the operand */
-					parsingOperand(file[i].src_opr, file[i].instruction->src_addr, obj, ext, &line_count, file[i].line_number);
+					parsingOperand(file[i].srcOpr, file[i].instruction->src_addr, obj, ext, &line_count, file[i].lineNumber);
                 }
 				/* if there is source operand */
-                if (file[i].dest_opr)
+                if (file[i].destOpr)
                 {
 					/* use the auxilary function to parse the operand */
-					parsingOperand(file[i].dest_opr, file[i].instruction->dest_addr, obj, ext, &line_count, file[i].line_number);
+					parsingOperand(file[i].destOpr, file[i].instruction->dest_addr, obj, ext, &line_count, file[i].lineNumber);
                 }
             }
         }

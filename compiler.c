@@ -62,7 +62,7 @@ int startInterpretation(int argc, char **filesList)
                     return EXIT;
                 }
             }
-            numOfLines[count].line_number = count + 1;
+            numOfLines[count].lineNumber = count + 1;
             numOfLines[++count].line = malloc(sizeof(char) * MAX_LINE);
         }
         /* free the extra line */

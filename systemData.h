@@ -54,10 +54,10 @@ typedef struct instrline {
 typedef struct cline {
     char *line;
     instructionLineObject *instruction;
-    unsigned char repeat;
-    unsigned int line_number;
-    char *src_opr;
-    char *dest_opr;
+    unsigned char oprRepeat;
+    unsigned int lineNumber;
+    char *srcOpr;
+    char *destOpr;
     char done;
 } codeLineObject;
 
