@@ -787,7 +787,9 @@ int second_parsing(code_line *file, int num_of_lines, char *module_name)
     return 0;
 }
 
-/* this function is called only in start of day, and loading all the opcodes into the hashtable */
+/* 
+ * @description Register the operations code to hash table
+ */
 void init_op_table()
 {
     ihn = int_install("mov" , MOV, optab);
