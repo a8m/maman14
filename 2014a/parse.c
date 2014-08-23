@@ -25,7 +25,7 @@ static int_hash_node *extrnalCmdList[HASHSIZE];
 /* linked list for the opcode replacements */
 static int_hash_node *operationList[HASHSIZE];
 /* temporary node for lookuping in the linkde lists */
-int_hash_node *ihn;
+int_hash_node *tempNode;
 /* array for entries */
 char *entryArrayList[MAX_ARR_SIZE];
 /* counters for entries end externals */
@@ -228,9 +228,9 @@ void parsingInstruction(code_line *c_line)
 	/* isolate the opcode */
 	c_line->line = strtok(c_line->line, "/");
 	/* find it in the opcode hashtable */
-	ihn = fetchIntFromHashTab(c_line->line, operationList);
+	tempNode = fetchIntFromHashTab(c_line->line, operationList);
 	/* if its not a valid opcode */
-	if (!ihn)
+	if (!tempNode)
 	{
 		/* check if its a comment or empty line */
         if ((c_line->line[0] == ';') || (c_line->line[0] = '\n'))
@@ -248,7 +248,7 @@ void parsingInstruction(code_line *c_line)
 	/* clear the instruction line */
     registerInstructionLine(c_line->instruction);
     local_ic++;
-	c_line->instruction->opcode = ihn->defn;
+	c_line->instruction->opcode = tempNode->defn;
 	/* seek for null char */
 	while (c_line->line[0] != '\0')
     {
@@ -423,7 +423,7 @@ void parsingCmd(code_line *c_line, char *symbol)
 		/* if there is a symbol */
 		if (symbol)
 		{
-			ihn = registerIntToHashTab(symbol, dc, dataSymbolsList);
+			tempNode = registerIntToHashTab(symbol, dc, dataSymbolsList);
 		}
         c_line->line += (sizeof(".string") - 1);
 		/* use the auxilary function to extract the string */
@@ -434,7 +434,7 @@ void parsingCmd(code_line *c_line, char *symbol)
 	{
 		if (symbol)
 		{
-			ihn = registerIntToHashTab(symbol, dc, dataSymbolsList);
+			tempNode = registerIntToHashTab(symbol, dc, dataSymbolsList);
 		}
         c_line->line += (sizeof(".data") - 1);
 		/* use the auxilary function to extract the data */
@@ -489,7 +489,7 @@ int firstPhase(code_line *file, int num_of_lines)
 		{
             if (symbol)
             {
-                ihn = registerIntToHashTab(symbol, ic, instructionsSymbolsList);
+                tempNode = registerIntToHashTab(symbol, ic, instructionsSymbolsList);
             }
 			parsingInstruction(&file[i]);
 		}
@@ -526,21 +526,21 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 			break;
 		case 1: /* its symbol */
 			/* check in the data hashtable */
-			if ((ihn = fetchIntFromHashTab(op, dataSymbolsList)))
+			if ((tempNode = fetchIntFromHashTab(op, dataSymbolsList)))
 			{
 				/* write the symbol address to the obj file */
-				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(ihn->defn + ic + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
+				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(tempNode->defn + ic + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
                 (*line_count)++;
 			}
 			/* check in the instruction hashtable */
-            else if ((ihn = fetchIntFromHashTab(op, instructionsSymbolsList)))
+            else if ((tempNode = fetchIntFromHashTab(op, instructionsSymbolsList)))
             {
 				/* write the symbol address to the obj file */
-				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(ihn->defn + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
+				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(tempNode->defn + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
                 (*line_count)++;
             }
 			/* check in the externals hashtable */
-            else if ((ihn = fetchIntFromHashTab(op, extrnalCmdList)))
+            else if ((tempNode = fetchIntFromHashTab(op, extrnalCmdList)))
 			{
 				/* write 0 to the obj file */
 				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count)+ LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(0).data, BASE, base_result1, PAD), 'E');
@@ -560,19 +560,19 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 			/* add there \0 char */
             op[i] = '\0';
 			/* check for the symbol in data hashtable */
-            if ((ihn = fetchIntFromHashTab(op, dataSymbolsList)))
+            if ((tempNode = fetchIntFromHashTab(op, dataSymbolsList)))
             {
-				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(ihn->defn + ic + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
+				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(tempNode->defn + ic + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
                 (*line_count)++;
             }
 			/* check for the symbol in instruction hashtable */
-            else if ((ihn = fetchIntFromHashTab(op, instructionsSymbolsList)))
+            else if ((tempNode = fetchIntFromHashTab(op, instructionsSymbolsList)))
             {
-				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(ihn->defn + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
+				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(tempNode->defn + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
                 (*line_count)++;
             }
 			/* check for the symbol in externals hashtable */
-            else if ((ihn = fetchIntFromHashTab(op, extrnalCmdList)))
+            else if ((tempNode = fetchIntFromHashTab(op, extrnalCmdList)))
             {
 				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(0).data, BASE, base_result1, PAD), 'E');
 				fprintf(ext, "%s\t%s\n", op, to_base(*line_count + LINE_OFFSET, BASE, base_result, NO_PAD));
@@ -588,7 +588,7 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
             for (;op[0] != '!'; op++) {};
             op++;
 
-            sum *= ihn->defn;
+            sum *= tempNode->defn;
             for (;op[0] != '}'; op++) {};
 
 			/* make sure it ends with ) */
@@ -735,14 +735,14 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
     for (i = 0; entryArrayList[i]; i++)
     {
 		/* try to find the address in the data hashtable */
-        if ((ihn = fetchIntFromHashTab(entryArrayList[i], dataSymbolsList)))
+        if ((tempNode = fetchIntFromHashTab(entryArrayList[i], dataSymbolsList)))
         {
-            fprintf(ent, "%s\t%s\n", entryArrayList[i], to_base(ihn->defn + LINE_OFFSET + 1 + ic, BASE, base_result, NO_PAD));
+            fprintf(ent, "%s\t%s\n", entryArrayList[i], to_base(tempNode->defn + LINE_OFFSET + 1 + ic, BASE, base_result, NO_PAD));
         }
 		/* try to find the address in the data hashtable */
-        else if((ihn = fetchIntFromHashTab(entryArrayList[i], instructionsSymbolsList)))
+        else if((tempNode = fetchIntFromHashTab(entryArrayList[i], instructionsSymbolsList)))
         {
-            fprintf(ent, "%s\t%s\n", entryArrayList[i], to_base(ihn->defn + LINE_OFFSET + 1, BASE, base_result, NO_PAD));
+            fprintf(ent, "%s\t%s\n", entryArrayList[i], to_base(tempNode->defn + LINE_OFFSET + 1, BASE, base_result, NO_PAD));
         }
         else
         {
@@ -792,20 +792,20 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
  */
 void registerOperations()
 {
-    ihn = registerIntToHashTab("mov" , MOV, operationList);
-    ihn = registerIntToHashTab("cmp" , CMP, operationList);
-    ihn = registerIntToHashTab("add" , ADD, operationList);
-    ihn = registerIntToHashTab("sub" , SUB, operationList);
-    ihn = registerIntToHashTab("not" , NOT, operationList);
-    ihn = registerIntToHashTab("clr" , CLR, operationList);
-    ihn = registerIntToHashTab("lea" , LEA, operationList);
-    ihn = registerIntToHashTab("inc" , INC, operationList);
-    ihn = registerIntToHashTab("dec" , DEC, operationList);
-    ihn = registerIntToHashTab("jmp" , JMP, operationList);
-    ihn = registerIntToHashTab("bne" , BNE, operationList);
-    ihn = registerIntToHashTab("red" , RED, operationList);
-    ihn = registerIntToHashTab("prn" , PRN, operationList);
-    ihn = registerIntToHashTab("jsr" , JSR, operationList);
-    ihn = registerIntToHashTab("rts" , RTS, operationList);
-    ihn = registerIntToHashTab("stop" , STOP, operationList);
+    tempNode = registerIntToHashTab("mov" , MOV, operationList);
+    tempNode = registerIntToHashTab("cmp" , CMP, operationList);
+    tempNode = registerIntToHashTab("add" , ADD, operationList);
+    tempNode = registerIntToHashTab("sub" , SUB, operationList);
+    tempNode = registerIntToHashTab("not" , NOT, operationList);
+    tempNode = registerIntToHashTab("clr" , CLR, operationList);
+    tempNode = registerIntToHashTab("lea" , LEA, operationList);
+    tempNode = registerIntToHashTab("inc" , INC, operationList);
+    tempNode = registerIntToHashTab("dec" , DEC, operationList);
+    tempNode = registerIntToHashTab("jmp" , JMP, operationList);
+    tempNode = registerIntToHashTab("bne" , BNE, operationList);
+    tempNode = registerIntToHashTab("red" , RED, operationList);
+    tempNode = registerIntToHashTab("prn" , PRN, operationList);
+    tempNode = registerIntToHashTab("jsr" , JSR, operationList);
+    tempNode = registerIntToHashTab("rts" , RTS, operationList);
+    tempNode = registerIntToHashTab("stop" , STOP, operationList);
 }
