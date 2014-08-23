@@ -41,7 +41,7 @@ int firstPhase(code_line *file, int num_of_lines);
  * @param num_of_lines {int}
  * @param file_path {String} argv argument
  */
- int secondPhase(code_line *file, int num_of_lines, char *module_name);
+ int secondPhase(code_line *file, int num_of_lines, char *filePath);
 /* 
  * @description Register the operations code to hash table
  */

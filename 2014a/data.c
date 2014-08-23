@@ -10,7 +10,7 @@
 /* 
  * Array of maskes requested by width 
  */
-unsigned char mask_by_width[] = {0x0, 0x1, 0x3, 0x7, 0xF, 0x1F, 0x3F, 0x7F, 0xFF};
+unsigned char maskWidthArray[] = {0x0, 0x1, 0x3, 0x7, 0xF, 0x1F, 0x3F, 0x7F, 0xFF};
 
 void registerDataLine(data_line *dl)
 {
@@ -36,15 +36,15 @@ data_line bline2data(instruction_line bl)
     data_line tmp;
     registerDataLine(&tmp);
 
-    tmp.data |= (mask_by_width[COMB_WIDTH]   << COMB_OFFSET)   & (bl.comb << COMB_OFFSET);
-    tmp.data |= (mask_by_width[DREG_WIDTH]   << DREG_OFFSET)   & (bl.dest_reg << DREG_OFFSET);
-    tmp.data |= (mask_by_width[DADDR_WIDTH]  << DADDR_OFFSET)  & (bl.dest_addr << DADDR_OFFSET);
-    tmp.data |= (mask_by_width[SREG_WIDTH]   << SREG_OFFSET)   & (bl.src_reg << SREG_OFFSET);
-    tmp.data |= (mask_by_width[SADDR_WIDTH]  << SADDR_OFFSET)  & (bl.src_addr << SADDR_OFFSET);
-    tmp.data |= (mask_by_width[OPCODE_WIDTH] << OPCODE_OFFSET) & (bl.opcode << OPCODE_OFFSET);
-    tmp.data |= (mask_by_width[TYPE_WIDTH]   << TYPE_OFFSET)   & (bl.type << TYPE_OFFSET);
-    tmp.data |= (mask_by_width[DBL_WIDTH]    << DBL_OFFSET)    & (bl.dbl << DBL_OFFSET);
-    tmp.data |= (mask_by_width[RSVD_WIDTH]   << RSVD_OFFSET)   & (bl.rsvd << RSVD_OFFSET);
+    tmp.data |= (maskWidthArray[COMB_WIDTH]   << COMB_OFFSET)   & (bl.comb << COMB_OFFSET);
+    tmp.data |= (maskWidthArray[DREG_WIDTH]   << DREG_OFFSET)   & (bl.dest_reg << DREG_OFFSET);
+    tmp.data |= (maskWidthArray[DADDR_WIDTH]  << DADDR_OFFSET)  & (bl.dest_addr << DADDR_OFFSET);
+    tmp.data |= (maskWidthArray[SREG_WIDTH]   << SREG_OFFSET)   & (bl.src_reg << SREG_OFFSET);
+    tmp.data |= (maskWidthArray[SADDR_WIDTH]  << SADDR_OFFSET)  & (bl.src_addr << SADDR_OFFSET);
+    tmp.data |= (maskWidthArray[OPCODE_WIDTH] << OPCODE_OFFSET) & (bl.opcode << OPCODE_OFFSET);
+    tmp.data |= (maskWidthArray[TYPE_WIDTH]   << TYPE_OFFSET)   & (bl.type << TYPE_OFFSET);
+    tmp.data |= (maskWidthArray[DBL_WIDTH]    << DBL_OFFSET)    & (bl.dbl << DBL_OFFSET);
+    tmp.data |= (maskWidthArray[RSVD_WIDTH]   << RSVD_OFFSET)   & (bl.rsvd << RSVD_OFFSET);
 
     return tmp;
 }

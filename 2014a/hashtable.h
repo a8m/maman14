@@ -5,14 +5,14 @@
  * =========================================================================================
  */
 
-typedef struct string_nlist {
-    struct string_nlist *next; /* next node */
+typedef struct stringNodeList {
+    struct stringNodeList *next; /* next node */
     char *name; /* name */
     char *defn; /* replacement string */
 } stringLinkedListNode;
 
-typedef struct int_nlist { 
-    struct int_nlist *next; /* next node */
+typedef struct intNodeList { 
+    struct intNodeList *next; /* next node */
     char *name; /* name */
     int defn; /* replacement int */
 } intLinkedListNode;

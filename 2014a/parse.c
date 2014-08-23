@@ -691,7 +691,7 @@ void checkForAdress(instruction_line *inst_line, int line_number)
  * @param num_of_lines {int}
  * @param file_path {String} argv argument
  */
-int secondPhase(code_line *file, int num_of_lines, char *module_name)
+int secondPhase(code_line *file, int num_of_lines, char *filePath)
 {
 	/* temporary arrays for converting to base 6 */
 	char base_result[MAX_DIGIT + 1], base_result1[MAX_DIGIT +1], file_name[MAX_FILENAME];
@@ -699,11 +699,11 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
 	/* pointers for the files */
     FILE *obj, *ext, *ent;
 	/* open all the relevant files */
-    sprintf(file_name, "%s.obj", module_name);
+    sprintf(file_name, "%s.obj", filePath);
     obj = fopen(file_name, "w");
-    sprintf(file_name, "%s.ext", module_name);
+    sprintf(file_name, "%s.ext", filePath);
     ext = fopen(file_name, "w");
-    sprintf(file_name, "%s.ent", module_name);
+    sprintf(file_name, "%s.ent", filePath);
     ent = fopen(file_name, "w");
 	/* print header */
     fprintf(obj, "%s %s\n", baseConvertor(ic, BASE, base_result, NO_PAD), baseConvertor(dc, BASE, base_result1, NO_PAD));
@@ -776,23 +776,23 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
 	/* if there is an PRINT_ERROR, delete all the files */
     if (flagForPRINT_ERROR)
     {
-        sprintf(file_name, "%s.obj", module_name);
+        sprintf(file_name, "%s.obj", filePath);
         remove(file_name);
-        sprintf(file_name, "%s.ext", module_name);
+        sprintf(file_name, "%s.ext", filePath);
         remove(file_name);
-        sprintf(file_name, "%s.ent", module_name);
+        sprintf(file_name, "%s.ent", filePath);
         remove(file_name);
     }
 	/* if there was'nt any externs */
     else if (counterForExtern == 0)
     {
-        sprintf(file_name, "%s.ext", module_name);
+        sprintf(file_name, "%s.ext", filePath);
         remove(file_name);
     }
 	/* if there was'nt any externs */
     else if (counterForEntry == 0)
     {
-        sprintf(file_name, "%s.ent", module_name);
+        sprintf(file_name, "%s.ent", filePath);
         remove(file_name);
     }
     return 0;

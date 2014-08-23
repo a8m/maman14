@@ -10,13 +10,16 @@
 #include <string.h>
 #include "common.h"
 
-/* hash: form hash value for string s */
+/* 
+ * @description form hash value for string s
+ * @param s {String}
+ */
 unsigned int hash(char *s)
 {
-    unsigned int hashval;
-    for (hashval = 0; *s != '\0'; s++)
-        hashval = *s + 31 * hashval;
-    return hashval % HASHSIZE;
+    unsigned int tempHashValue;
+    for (tempHashValue = 0; *s != '\0'; s++)
+        tempHashValue = *s + 31 * tempHashValue;
+    return tempHashValue % HASHSIZE;
 }
 
 /* 
@@ -59,14 +62,14 @@ intLinkedListNode *fetchIntFromHashTab(char *s, intLinkedListNode *hashtab[])
 stringLinkedListNode *registerStringToHashTab(char *name, char *defn, stringLinkedListNode *hashtab[])
 {
     stringLinkedListNode *np;
-    unsigned int hashval;
+    unsigned int tempHashValue;
     if ((np = fetchStringFromHashTab(name, hashtab)) == NULL) { /* not found */
         np = (stringLinkedListNode *) malloc(sizeof(*np));
         if (np == NULL || (np->name = strCopy(name)) == NULL)
             return NULL;
-        hashval = hash(name);
-        np->next = hashtab[hashval];
-        hashtab[hashval] = np;
+        tempHashValue = hash(name);
+        np->next = hashtab[tempHashValue];
+        hashtab[tempHashValue] = np;
     } else /* already there */
         free((void *) np->defn); /*free previous defn */
     if ((np->defn = strCopy(defn)) == NULL)
@@ -83,14 +86,14 @@ stringLinkedListNode *registerStringToHashTab(char *name, char *defn, stringLink
  intLinkedListNode *registerIntToHashTab(char *name, int defn, intLinkedListNode *hashtab[])
 {
     intLinkedListNode *np;
-    unsigned int hashval;
+    unsigned int tempHashValue;
     if ((np = fetchIntFromHashTab(name, hashtab)) == NULL) { /* not found */
         np = (intLinkedListNode *) malloc(sizeof(*np));
         if (np == NULL || (np->name = strCopy(name)) == NULL)
             return NULL;
-        hashval = hash(name);
-        np->next = hashtab[hashval];
-        hashtab[hashval] = np;
+        tempHashValue = hash(name);
+        np->next = hashtab[tempHashValue];
+        hashtab[tempHashValue] = np;
     }
     np->defn = defn;
     return np;
