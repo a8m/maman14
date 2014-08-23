@@ -47,7 +47,7 @@
 #define OPCODE_WIDTH 4
 #define TYPE_WIDTH 1
 #define DBL_WIDTH 1
-#define RSVD_WIDTH 3
+#define RSVD_WIDTH 2
 
 #define COMB_OFFSET 0
 #define DREG_OFFSET 2
