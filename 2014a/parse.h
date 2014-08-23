@@ -28,9 +28,19 @@
 #define RTS 14
 #define STOP 15
 
-/* this function is doing the first parsing to the line, and leaving for the second parsing to check for the symbols addresses and parsing the operands */
+/* 
+ * @description Do the first parsing to the line, 
+ * and leaving for the second parsing to check for the symbols addresses and parsing the operands 
+ * @param *file {code_line}
+ * @param num_of_lines {int}
+ */
 int first_parsing(code_line *file, int num_of_lines);
-/* this function is doing the second parsing for the line, resolving the symbols and parsing the operands */
-int second_parsing(code_line *file, int num_of_lines, char *module_name);
+/* 
+ * @description Do the second parsing for the line, resolving the symbols and parsing the operands
+ * @param *file {code_line}
+ * @param num_of_lines {int}
+ * @param file_path {String} argv argument
+ */
+ int second_parsing(code_line *file, int num_of_lines, char *module_name);
 /* this function is called only in start of day, and loading all the opcodes into the hashtable */
 void init_op_table();

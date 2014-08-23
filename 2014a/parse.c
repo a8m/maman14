@@ -462,7 +462,12 @@ void parse_command(code_line *c_line, char *symbol)
     c_line->done = 1;
 }
 
-/* this function is doing the first parsing to the line, and leaving for the second parsing to check for the symbols addresses and parsing the operands */
+/* 
+ * @description Do the first parsing to the line, 
+ * and leaving for the second parsing to check for the symbols addresses and parsing the operands 
+ * @param *file {code_line}
+ * @param num_of_lines {int}
+ */
 int first_parsing(code_line *file, int num_of_lines)
 {
     char *symbol;
@@ -669,7 +674,12 @@ void check_addressing(instruction_line *inst_line, int line_number)
     }
 }
 
-/* this function is doing the second parsing for the line, resolving the symbols and parsing the operands */
+/* 
+ * @description Do the second parsing for the line, resolving the symbols and parsing the operands
+ * @param *file {code_line}
+ * @param num_of_lines {int}
+ * @param file_path {String} argv argument
+ */
 int second_parsing(code_line *file, int num_of_lines, char *module_name)
 {
 	/* temporary arrays for converting to base 6 */
