@@ -355,11 +355,11 @@ void parsingInstruction(codeLineObject *codeLine)
                 localCounter++;
                 if (numOfValidOperands == 1)
                 {
-                    codeLine->instruction->src_addr = 0;
+                    codeLine->instruction->srcAddr = 0;
                 }
                 else
                 {
-                    codeLine->instruction->dest_addr = 0;
+                    codeLine->instruction->destAddr = 0;
                 }
                 break;
 			case 'r':
@@ -368,15 +368,15 @@ void parsingInstruction(codeLineObject *codeLine)
                 {
                     if (numOfValidOperands == 1)
                     {
-                        codeLine->instruction->src_reg = codeLine->line[0] - '0';
+                        codeLine->instruction->srcReg = codeLine->line[0] - '0';
                         free(codeLine->srcOpr);
-                        codeLine->instruction->src_addr = 3;
+                        codeLine->instruction->srcAddr = 3;
                     }
                     else
                     {
-                        codeLine->instruction->dest_reg = codeLine->line[0] - '0';
+                        codeLine->instruction->destReg = codeLine->line[0] - '0';
                         free(codeLine->destOpr);
-                        codeLine->instruction->dest_addr = 3;
+                        codeLine->instruction->destAddr = 3;
                     }
                     break;
                 }
@@ -387,11 +387,11 @@ void parsingInstruction(codeLineObject *codeLine)
                     localCounter++;
                     if (numOfValidOperands == 1)
                     {
-                        codeLine->instruction->src_addr = 2;
+                        codeLine->instruction->srcAddr = 2;
                     }
                     else
                     {
-                        codeLine->instruction->dest_addr = 2;
+                        codeLine->instruction->destAddr = 2;
                     }
 
                 }
@@ -399,11 +399,11 @@ void parsingInstruction(codeLineObject *codeLine)
                 {
                     if (numOfValidOperands == 1)
                     {
-                        codeLine->instruction->src_addr = 1;
+                        codeLine->instruction->srcAddr = 1;
                     }
                     else
                     {
-                        codeLine->instruction->dest_addr = 1;
+                        codeLine->instruction->destAddr = 1;
                     }
                 }
 		}
@@ -625,14 +625,14 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 }
 
 /* this function checks if the given addressing is valid */
-void checkForAdress(instructionLineObject *inst_line, int lineNumber)
+void checkForAdress(instructionLineObject *instLine, int lineNumber)
 {
-    switch(inst_line->opcode)
+    switch(instLine->opcode)
     {
         case MOV:
         case ADD:
         case SUB:
-            if (inst_line->dest_addr == 0)
+            if (instLine->destAddr == 0)
             {
                 PRINT_ERROR("Ilegal addressing",lineNumber)
                 flagForError = 1;
@@ -645,7 +645,7 @@ void checkForAdress(instructionLineObject *inst_line, int lineNumber)
         case JMP:
         case BNE:
         case RED:
-            if ((inst_line->dest_addr == 0) || (inst_line->src_addr != 0))
+            if ((instLine->destAddr == 0) || (instLine->srcAddr != 0))
             {
                 PRINT_ERROR("Ilegal addressing",lineNumber)
                 flagForError = 1;
@@ -653,28 +653,28 @@ void checkForAdress(instructionLineObject *inst_line, int lineNumber)
             break;
         case RTS:
         case STOP:
-            if ((inst_line->dest_addr != 0) || (inst_line->src_addr != 0))
+            if ((instLine->destAddr != 0) || (instLine->srcAddr != 0))
             {
                 PRINT_ERROR("Ilegal addressing",lineNumber)
                 flagForError = 1;
             }
             break;
         case LEA:
-            if ((inst_line->dest_addr == 0) || (inst_line->src_addr == 0))
+            if ((instLine->destAddr == 0) || (instLine->srcAddr == 0))
             {
                 PRINT_ERROR("Ilegal addressing",lineNumber)
                 flagForError = 1;
             }
             break;
         case PRN:
-            if (inst_line->src_addr != 0)
+            if (instLine->srcAddr != 0)
             {
                 PRINT_ERROR("Ilegal addressing",lineNumber)
                 flagForError = 1;
             }
             break;
         case JSR:
-            if ((inst_line->dest_addr != 1) || (inst_line->src_addr != 0))
+            if ((instLine->destAddr != 1) || (instLine->srcAddr != 0))
             {
                 PRINT_ERROR("Ilegal addressing",lineNumber)
                 flagForError = 1;
@@ -724,13 +724,13 @@ int secondPhase(codeLineObject *file, int numberOfLine, char *filePath)
                 if (file[i].srcOpr)
                 {
 					/* use the auxilary function to parse the operand */
-					parsingOperand(file[i].srcOpr, file[i].instruction->src_addr, obj, ext, &line_count, file[i].lineNumber);
+					parsingOperand(file[i].srcOpr, file[i].instruction->srcAddr, obj, ext, &line_count, file[i].lineNumber);
                 }
 				/* if there is source operand */
                 if (file[i].destOpr)
                 {
 					/* use the auxilary function to parse the operand */
-					parsingOperand(file[i].destOpr, file[i].instruction->dest_addr, obj, ext, &line_count, file[i].lineNumber);
+					parsingOperand(file[i].destOpr, file[i].instruction->destAddr, obj, ext, &line_count, file[i].lineNumber);
                 }
             }
         }

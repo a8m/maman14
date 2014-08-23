@@ -40,10 +40,10 @@ typedef struct dline {
 /* type for an instruction line (using bit fields) */
 typedef struct instrline {
     unsigned int comb      : COMB_WIDTH;
-    unsigned int dest_reg  : DREG_WIDTH;
-    unsigned int dest_addr : DADDR_WIDTH;
-    unsigned int src_reg   : SREG_WIDTH;
-    unsigned int src_addr  : SADDR_WIDTH;
+    unsigned int destReg  : DREG_WIDTH;
+    unsigned int destAddr : DADDR_WIDTH;
+    unsigned int srcReg   : SREG_WIDTH;
+    unsigned int srcAddr  : SADDR_WIDTH;
     unsigned int opcode    : OPCODE_WIDTH;
     unsigned int type      : TYPE_WIDTH;
     unsigned int dbl       : DBL_WIDTH;

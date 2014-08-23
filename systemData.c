@@ -37,10 +37,10 @@ data_line bline2data(instructionLineObject bl)
     registerDataLine(&tmp);
 
     tmp.data |= (maskWidthArray[COMB_WIDTH]   << COMB_OFFSET)   & (bl.comb << COMB_OFFSET);
-    tmp.data |= (maskWidthArray[DREG_WIDTH]   << DREG_OFFSET)   & (bl.dest_reg << DREG_OFFSET);
-    tmp.data |= (maskWidthArray[DADDR_WIDTH]  << DADDR_OFFSET)  & (bl.dest_addr << DADDR_OFFSET);
-    tmp.data |= (maskWidthArray[SREG_WIDTH]   << SREG_OFFSET)   & (bl.src_reg << SREG_OFFSET);
-    tmp.data |= (maskWidthArray[SADDR_WIDTH]  << SADDR_OFFSET)  & (bl.src_addr << SADDR_OFFSET);
+    tmp.data |= (maskWidthArray[DREG_WIDTH]   << DREG_OFFSET)   & (bl.destReg << DREG_OFFSET);
+    tmp.data |= (maskWidthArray[DADDR_WIDTH]  << DADDR_OFFSET)  & (bl.destAddr << DADDR_OFFSET);
+    tmp.data |= (maskWidthArray[SREG_WIDTH]   << SREG_OFFSET)   & (bl.srcReg << SREG_OFFSET);
+    tmp.data |= (maskWidthArray[SADDR_WIDTH]  << SADDR_OFFSET)  & (bl.srcAddr << SADDR_OFFSET);
     tmp.data |= (maskWidthArray[OPCODE_WIDTH] << OPCODE_OFFSET) & (bl.opcode << OPCODE_OFFSET);
     tmp.data |= (maskWidthArray[TYPE_WIDTH]   << TYPE_OFFSET)   & (bl.type << TYPE_OFFSET);
     tmp.data |= (maskWidthArray[DBL_WIDTH]    << DBL_OFFSET)    & (bl.dbl << DBL_OFFSET);
@@ -78,10 +78,10 @@ data_line num2data(int num)
 void registerInstructionLine(instructionLineObject *il)
 {
     il->comb = 0;
-    il->dest_reg = 0;
-    il->dest_addr = 0;
-    il->src_reg = 0;
-    il->src_addr = 0;
+    il->destReg = 0;
+    il->destAddr = 0;
+    il->srcReg = 0;
+    il->srcAddr = 0;
     il->opcode = 0;
     il->type = 0;
     il->dbl = 0;

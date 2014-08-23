@@ -29,7 +29,7 @@ int startInterpretation(int argc, char **filesList)
 
     for (i = 1; i < argc; i++)
     {
-        int count = 0, buf_count = BUF_SIZE;
+        int count = 0, bufferCounter = BUF_SIZE;
         codeLineObject *numOfLines, *tmp;
         /* create the string to open the file and open it */
         sprintf(fileName, "%s.as", filesList[i]);
@@ -48,10 +48,10 @@ int startInterpretation(int argc, char **filesList)
         while (fgets(numOfLines[count].line, MAX_LINE, fp))
         {
              /* if there is a need for reallocation */
-            if (count == buf_count)
+            if (count == bufferCounter)
             {
-                buf_count += BUF_SIZE;
-                tmp = realloc(numOfLines, sizeof(codeLineObject) * buf_count);
+                bufferCounter += BUF_SIZE;
+                tmp = realloc(numOfLines, sizeof(codeLineObject) * bufferCounter);
                 if (tmp)
                 {
                     numOfLines = tmp;
