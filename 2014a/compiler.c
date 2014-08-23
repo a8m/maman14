@@ -23,7 +23,7 @@ int startInterpretation(int argc, char **filesList)
 {
     int i;
     FILE *fp;
-    char file_name[20];
+    char fileName[20];
     
     registerOperations();
 
@@ -32,12 +32,12 @@ int startInterpretation(int argc, char **filesList)
         int count = 0, buf_count = BUF_SIZE;
         code_line *file_lines, *tmp;
         /* create the string to open the file and open it */
-        sprintf(file_name, "%s.as", filesList[i]);
-        fp = fopen(file_name, "r");
+        sprintf(fileName, "%s.as", filesList[i]);
+        fp = fopen(fileName, "r");
         /* if the files can't be found */
         if (fp == NULL)
         {
-            printf("ERROR: can't find file %s\n, Please insert files name without suffix .as", file_name);
+            printf("ERROR: can't find file %s\n, Please insert files name without suffix .as", fileName);
             return EXIT;
         }
         

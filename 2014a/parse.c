@@ -33,7 +33,7 @@ int counterForEntry, counterForExtern;
 /* general counter, and data and instructions counter */
 int i, ic, dc;
 /* flags for decide if to create the files */
-char flagForPRINT_ERROR = 0, flagForExtern = 0, flagForEntry = 0;
+char flagForError = 0, flagForExtern = 0, flagForEntry = 0;
 
 /* this function is checking if there is a symbol. if yes, its returning a pointer to it, if not, returns null */
 char *fetchSymbol(code_line *codeLine)
@@ -51,7 +51,7 @@ char *fetchSymbol(code_line *codeLine)
             if (!isalpha(tmp[0]))
             {
                 PRINT_ERROR("Symbol should start with a char", codeLine->line_number)
-                flagForPRINT_ERROR = 1;
+                flagForError = 1;
             }
             return tmp;
         }
@@ -82,7 +82,7 @@ void parseData(code_line *codeLine)
         if (!isdigit((*codeLine).line[0]))
         {
             PRINT_ERROR("Wrong .data format, expecting number", (*codeLine).line_number)
-			flagForPRINT_ERROR = 1;
+			flagForError = 1;
         }
         else
         {
@@ -114,7 +114,7 @@ void parseData(code_line *codeLine)
 	if (expecting_number == 1)
 	{
 		PRINT_ERROR("Expecting number after \',\'", (*codeLine).line_number)
-		flagForPRINT_ERROR = 1;
+		flagForError = 1;
 	}
 
 }
@@ -127,7 +127,7 @@ void parseString(code_line *codeLine)
     if (!(codeLine->line[0] == '\"'))
     {
         PRINT_ERROR(".string argument must start with \"", (*codeLine).line_number)
-		flagForPRINT_ERROR = 1;
+		flagForError = 1;
         return;
     }
 
@@ -148,7 +148,7 @@ void parseString(code_line *codeLine)
     else
     {
         PRINT_ERROR(".string argument must end with \"", (*codeLine).line_number)
-		flagForPRINT_ERROR = 1;
+		flagForError = 1;
         return;
     }
     
@@ -163,7 +163,7 @@ void parseEntry(code_line *codeLine)
 	if (!codeLine->line)
 	{
         PRINT_ERROR("No value found after entry command", (*codeLine).line_number)
-		flagForPRINT_ERROR = 1;
+		flagForError = 1;
 		return;
 	}
 	/* add entry to entries array */
@@ -173,7 +173,7 @@ void parseEntry(code_line *codeLine)
 	if (codeLine->line)
 	{
         PRINT_ERROR("Unexpected words in entry command", (*codeLine).line_number)
-		flagForPRINT_ERROR = 1;
+		flagForError = 1;
 	}
 }
 
@@ -186,7 +186,7 @@ void parseExtern(code_line *codeLine)
 	if (!codeLine->line)
 	{
         PRINT_ERROR("No value found after extern command", (*codeLine).line_number)
-		flagForPRINT_ERROR = 1;
+		flagForError = 1;
 		return;
 	}
 	/* add to the extern hashtable with value 0 */
@@ -197,7 +197,7 @@ void parseExtern(code_line *codeLine)
 	if (codeLine->line)
 	{
         PRINT_ERROR("Unexpected words in extern command", (*codeLine).line_number)
-		flagForPRINT_ERROR = 1;
+		flagForError = 1;
 	}
 }
 
@@ -223,8 +223,8 @@ char checkExpOperands(char *s)
 void parsingInstruction(code_line *codeLine)
 {
 	/* count how many instruction lines this line using, including repeats */
-    int local_ic = 0;
-	char num_of_exp_operands;
+    int localCounter = 0;
+	char numOfValidOperands;
 	/* isolate the opcode */
 	codeLine->line = strtok(codeLine->line, "/");
 	/* find it in the opcode hashtable */
@@ -239,15 +239,15 @@ void parsingInstruction(code_line *codeLine)
             return;
         }
         PRINT_ERROR("Ilegal instruction", (*codeLine).line_number)
-		flagForPRINT_ERROR = 1;
+		flagForError = 1;
 		return;
 	}
 	/* use the auxilary function to count the expected operands */
-	num_of_exp_operands = checkExpOperands(codeLine->line);
+	numOfValidOperands = checkExpOperands(codeLine->line);
 	codeLine->instruction = (instruction_line *) malloc(sizeof(instruction_line) * 8);
 	/* clear the instruction line */
     registerInstructionLine(codeLine->instruction);
-    local_ic++;
+    localCounter++;
 	codeLine->instruction->opcode = tempNode->defn;
 	/* seek for null char */
 	while (codeLine->line[0] != '\0')
@@ -268,7 +268,7 @@ void parsingInstruction(code_line *codeLine)
 			if (!(codeLine->line[0] == '/'))
 			{
 				PRINT_ERROR("Expecting comb values after type 1", (*codeLine).line_number)
-				flagForPRINT_ERROR = 1;
+				flagForError = 1;
 				return;
 			}
 			(codeLine->line)++;
@@ -281,7 +281,7 @@ void parsingInstruction(code_line *codeLine)
 					break;
 				default:
 					PRINT_ERROR("Ilegal value for comb", (*codeLine).line_number)
-					flagForPRINT_ERROR = 1;
+					flagForError = 1;
 					return;
 			}
 			(codeLine->line)++;
@@ -289,7 +289,7 @@ void parsingInstruction(code_line *codeLine)
 			if (!(codeLine->line[0] == '/'))
 			{
 				PRINT_ERROR("Expecting cobm values after type 1", (*codeLine).line_number)
-				flagForPRINT_ERROR = 1;
+				flagForError = 1;
 				return;
 			}
 			(codeLine->line)++;
@@ -302,20 +302,20 @@ void parsingInstruction(code_line *codeLine)
 					break;
 				default:
 					PRINT_ERROR("Ilegal value for comb", (*codeLine).line_number)
-					flagForPRINT_ERROR = 1;
+					flagForError = 1;
 					return;
 			}
             break;
 		default:
 			PRINT_ERROR("Ilegal value for comb", (*codeLine).line_number)
-			flagForPRINT_ERROR = 1;
+			flagForError = 1;
 			return;
 	}
 	(codeLine->line)++;
 	if (!(codeLine->line[0] == ','))
 	{
 		PRINT_ERROR("Expecting ',' after type and comb values", (*codeLine).line_number)
-		flagForPRINT_ERROR = 1;
+		flagForError = 1;
 		return;
 	}
 	(codeLine->line)++;
@@ -336,9 +336,9 @@ void parsingInstruction(code_line *codeLine)
     
 	 /*read the expected number of operands */
     codeLine->line = strtok(codeLine->line, " \t,\n");
-	while (num_of_exp_operands-- > 0)
+	while (numOfValidOperands-- > 0)
 	{
-        if (num_of_exp_operands == 1)
+        if (numOfValidOperands == 1)
         {
 			/* its the first operand */
             codeLine->src_opr = strCopy(codeLine->line);
@@ -352,8 +352,8 @@ void parsingInstruction(code_line *codeLine)
         switch (codeLine->line[0])
 		{
 			case '#':
-                local_ic++;
-                if (num_of_exp_operands == 1)
+                localCounter++;
+                if (numOfValidOperands == 1)
                 {
                     codeLine->instruction->src_addr = 0;
                 }
@@ -366,7 +366,7 @@ void parsingInstruction(code_line *codeLine)
                 (codeLine->line)++;
                 if ((codeLine->line[0] >= '0') && (codeLine->line[0] <='7'))
                 {
-                    if (num_of_exp_operands == 1)
+                    if (numOfValidOperands == 1)
                     {
                         codeLine->instruction->src_reg = codeLine->line[0] - '0';
                         free(codeLine->src_opr);
@@ -381,11 +381,11 @@ void parsingInstruction(code_line *codeLine)
                     break;
                 }
 		    default:
-                local_ic++;
+                localCounter++;
                 if (strstr(codeLine->line, "{!"))
                 {
-                    local_ic++;
-                    if (num_of_exp_operands == 1)
+                    localCounter++;
+                    if (numOfValidOperands == 1)
                     {
                         codeLine->instruction->src_addr = 2;
                     }
@@ -397,7 +397,7 @@ void parsingInstruction(code_line *codeLine)
                 }
                 else
                 {
-                    if (num_of_exp_operands == 1)
+                    if (numOfValidOperands == 1)
                     {
                         codeLine->instruction->src_addr = 1;
                     }
@@ -409,7 +409,7 @@ void parsingInstruction(code_line *codeLine)
 		}
         codeLine->line = strtok(NULL, " \t,\n");
 	}
-    ic += (local_ic * codeLine->repeat);
+    ic += (localCounter * codeLine->repeat);
 	
 }
 
@@ -456,7 +456,7 @@ void parsingCmd(code_line *codeLine, char *symbol)
 	else
 	{
 		PRINT_ERROR("Unrecognized command", (*codeLine).line_number)
-		flagForPRINT_ERROR = 1;
+		flagForError = 1;
 	}
     codeLine->done = 1;
 }
@@ -470,7 +470,7 @@ void parsingCmd(code_line *codeLine, char *symbol)
 int firstPhase(code_line *file, int numberOfLine)
 {
     char *symbol;
-	flagForPRINT_ERROR = 0;
+	flagForError = 0;
 	ic = 0;
 	dc = 0;
 	counterForExtern = 0;
@@ -550,7 +550,7 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
             else
             {
                 PRINT_ERROR("Can't find symbol in symbol table or in extern table", org_line_num)
-                flagForPRINT_ERROR = 1;
+                flagForError = 1;
             }
             break;
         case 2: /* Elaborate addressing */
@@ -580,7 +580,7 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
             else
             {
                 PRINT_ERROR("Can't find symbol in symbol table or in extern table", org_line_num)
-                flagForPRINT_ERROR = 1;
+                flagForError = 1;
             }
             op[i] = '{'; /* put back { char for the case this line will repeat */
 			/* seek for ! char */
@@ -605,14 +605,14 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
             if (!(op[0] == '}'))
             {
                 PRINT_ERROR("Wrong format for elaborate addressing", org_line_num)
-                flagForPRINT_ERROR = 1;
+                flagForError = 1;
                 break;
             }
 			/* make sure you are not going out of the data array bounds */
             if (sum >= dc)
             {
                 PRINT_ERROR("Given index is out of the data bounds", org_line_num)
-                flagForPRINT_ERROR = 1;
+                flagForError = 1;
             }
             else
             {
@@ -635,7 +635,7 @@ void checkForAdress(instruction_line *inst_line, int line_number)
             if (inst_line->dest_addr == 0)
             {
                 PRINT_ERROR("Ilegal addressing",line_number)
-                flagForPRINT_ERROR = 1;
+                flagForError = 1;
             }
             break;
         case NOT:
@@ -648,7 +648,7 @@ void checkForAdress(instruction_line *inst_line, int line_number)
             if ((inst_line->dest_addr == 0) || (inst_line->src_addr != 0))
             {
                 PRINT_ERROR("Ilegal addressing",line_number)
-                flagForPRINT_ERROR = 1;
+                flagForError = 1;
             }
             break;
         case RTS:
@@ -656,28 +656,28 @@ void checkForAdress(instruction_line *inst_line, int line_number)
             if ((inst_line->dest_addr != 0) || (inst_line->src_addr != 0))
             {
                 PRINT_ERROR("Ilegal addressing",line_number)
-                flagForPRINT_ERROR = 1;
+                flagForError = 1;
             }
             break;
         case LEA:
             if ((inst_line->dest_addr == 0) || (inst_line->src_addr == 0))
             {
                 PRINT_ERROR("Ilegal addressing",line_number)
-                flagForPRINT_ERROR = 1;
+                flagForError = 1;
             }
             break;
         case PRN:
             if (inst_line->src_addr != 0)
             {
                 PRINT_ERROR("Ilegal addressing",line_number)
-                flagForPRINT_ERROR = 1;
+                flagForError = 1;
             }
             break;
         case JSR:
             if ((inst_line->dest_addr != 1) || (inst_line->src_addr != 0))
             {
                 PRINT_ERROR("Ilegal addressing",line_number)
-                flagForPRINT_ERROR = 1;
+                flagForError = 1;
             }
             break;
 
@@ -693,17 +693,17 @@ void checkForAdress(instruction_line *inst_line, int line_number)
 int secondPhase(code_line *file, int numberOfLine, char *filePath)
 {
 	/* temporary arrays for converting to base 8 */
-	char resultBaseArray[MAX_DIGIT + 1], tempBaseArray[MAX_DIGIT +1], file_name[MAX_FILENAME];
+	char resultBaseArray[MAX_DIGIT + 1], tempBaseArray[MAX_DIGIT +1], fileName[MAX_FILENAME];
     int i, j, line_count = 0;
 	/* pointers for the files */
     FILE *obj, *ext, *ent;
 	/* open all the relevant files */
-    sprintf(file_name, "%s.obj", filePath);
-    obj = fopen(file_name, "w");
-    sprintf(file_name, "%s.ext", filePath);
-    ext = fopen(file_name, "w");
-    sprintf(file_name, "%s.ent", filePath);
-    ent = fopen(file_name, "w");
+    sprintf(fileName, "%s.obj", filePath);
+    obj = fopen(fileName, "w");
+    sprintf(fileName, "%s.ext", filePath);
+    ext = fopen(fileName, "w");
+    sprintf(fileName, "%s.ent", filePath);
+    ent = fopen(fileName, "w");
 	/* print header */
     fprintf(obj, "%s %s\n", baseConvertor(ic, BASE, resultBaseArray, NO_PAD), baseConvertor(dc, BASE, tempBaseArray, NO_PAD));
     line_count++;
@@ -757,7 +757,7 @@ int secondPhase(code_line *file, int numberOfLine, char *filePath)
         else
         {
             fprintf(stderr, "PRINT_ERROR, can't find assress for entry %s\n", entryArrayList[i]);
-            flagForPRINT_ERROR = 1;
+            flagForError = 1;
         }
     }
 	/* close all the open files */
@@ -773,26 +773,26 @@ int secondPhase(code_line *file, int numberOfLine, char *filePath)
 		extrnalCmdList[i] = NULL;
 	}
 	/* if there is an PRINT_ERROR, delete all the files */
-    if (flagForPRINT_ERROR)
+    if (flagForError)
     {
-        sprintf(file_name, "%s.obj", filePath);
-        remove(file_name);
-        sprintf(file_name, "%s.ext", filePath);
-        remove(file_name);
-        sprintf(file_name, "%s.ent", filePath);
-        remove(file_name);
+        sprintf(fileName, "%s.obj", filePath);
+        remove(fileName);
+        sprintf(fileName, "%s.ext", filePath);
+        remove(fileName);
+        sprintf(fileName, "%s.ent", filePath);
+        remove(fileName);
     }
 	/* if there was'nt any externs */
     else if (counterForExtern == 0)
     {
-        sprintf(file_name, "%s.ext", filePath);
-        remove(file_name);
+        sprintf(fileName, "%s.ext", filePath);
+        remove(fileName);
     }
 	/* if there was'nt any externs */
     else if (counterForEntry == 0)
     {
-        sprintf(file_name, "%s.ent", filePath);
-        remove(file_name);
+        sprintf(fileName, "%s.ent", filePath);
+        remove(fileName);
     }
     return 0;
 }
