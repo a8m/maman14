@@ -32,16 +32,16 @@
  * @description Do the first parsing to the line, 
  * and leaving for the second parsing to check for the symbols addresses and parsing the operands 
  * @param *file {code_line}
- * @param num_of_lines {int}
+ * @param numberOfLine {int}
  */
-int firstPhase(code_line *file, int num_of_lines);
+int firstPhase(code_line *file, int numberOfLine);
 /* 
  * @description Do the second parsing for the line, resolving the symbols and parsing the operands
  * @param *file {code_line}
- * @param num_of_lines {int}
+ * @param numberOfLine {int}
  * @param file_path {String} argv argument
  */
- int secondPhase(code_line *file, int num_of_lines, char *filePath);
+ int secondPhase(code_line *file, int numberOfLine, char *filePath);
 /* 
  * @description Register the operations code to hash table
  */
