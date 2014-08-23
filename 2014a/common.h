@@ -17,7 +17,7 @@ void trim(char **str);
  * @param str {String}
  * @return copied string {String}
  */
- char *strdup(const char *str);
+ char *strCopy(const char *str);
 /* 
  * @descipriton converting int to ant requested base, if pad is '1', the function will add leading '0' to the number 
  * @param number {int}
@@ -26,7 +26,7 @@ void trim(char **str);
  * @param pad {int}
  * @return pointer to the char in the first of the converted number
  */
-char *to_base(int num, int base, char *result, int pad);
+char *baseConvertor(int num, int base, char *result, int pad);
 
 /* 
  * @descipriton MACRO - PRINT_ERROR printing 
@@ -38,6 +38,6 @@ char *to_base(int num, int base, char *result, int pad);
 #define PRINT_ERROR(MSG,LINE) fprintf(stderr, "PRINT_ERROR in line %d: %s\n", LINE, MSG);
 
 /* 
- * max digit for the to_base function 
+ * max digit for the baseConvertor function 
  */
 #define MAX_DIGIT 8

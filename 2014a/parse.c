@@ -167,7 +167,7 @@ void parseEntry(code_line *c_line)
 		return;
 	}
 	/* add entry to entries array */
-	entryArrayList[counterForEntry++] = strdup(c_line->line);
+	entryArrayList[counterForEntry++] = strCopy(c_line->line);
 	c_line->line = strtok(NULL, " \t\n");
 	/* make sure there is no other words */
 	if (c_line->line)
@@ -342,12 +342,12 @@ void parsingInstruction(code_line *c_line)
         if (num_of_exp_operands == 1)
         {
 			/* its the first operand */
-            c_line->src_opr = strdup(c_line->line);
+            c_line->src_opr = strCopy(c_line->line);
         }
         else
         {
 			/* its the second operand */
-            c_line->dest_opr = strdup(c_line->line);
+            c_line->dest_opr = strCopy(c_line->line);
         }
 		/* check for the type of the oprands and decide how much ic should be incremented */
         switch (c_line->line[0])
@@ -521,7 +521,7 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 				op++;
 			}
 			/* write the given number to the obj file */
-			fprintf(obj, "%s\t%s\t%c\n",to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD) , to_base(num2data(sum * sign).data, BASE, base_result1, PAD), 'A');
+			fprintf(obj, "%s\t%s\t%c\n",baseConvertor((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD) , baseConvertor(num2data(sum * sign).data, BASE, base_result1, PAD), 'A');
             (*line_count)++;
 			break;
 		case 1: /* its symbol */
@@ -529,23 +529,23 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 			if ((tempNode = fetchIntFromHashTab(op, dataSymbolsList)))
 			{
 				/* write the symbol address to the obj file */
-				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(tempNode->defn + ic + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
+				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), baseConvertor(num2data(tempNode->defn + ic + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
                 (*line_count)++;
 			}
 			/* check in the instruction hashtable */
             else if ((tempNode = fetchIntFromHashTab(op, instructionsSymbolsList)))
             {
 				/* write the symbol address to the obj file */
-				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(tempNode->defn + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
+				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), baseConvertor(num2data(tempNode->defn + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
                 (*line_count)++;
             }
 			/* check in the externals hashtable */
             else if ((tempNode = fetchIntFromHashTab(op, extrnalCmdList)))
 			{
 				/* write 0 to the obj file */
-				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count)+ LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(0).data, BASE, base_result1, PAD), 'E');
+				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count)+ LINE_OFFSET, BASE, base_result, NO_PAD), baseConvertor(num2data(0).data, BASE, base_result1, PAD), 'E');
 				/* add line to the ext file */
-				fprintf(ext, "%s\t%s\n", op, to_base(*line_count + LINE_OFFSET, BASE, base_result, NO_PAD));
+				fprintf(ext, "%s\t%s\n", op, baseConvertor(*line_count + LINE_OFFSET, BASE, base_result, NO_PAD));
 				(*line_count)++;
 			}
             else
@@ -562,20 +562,20 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 			/* check for the symbol in data hashtable */
             if ((tempNode = fetchIntFromHashTab(op, dataSymbolsList)))
             {
-				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(tempNode->defn + ic + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
+				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), baseConvertor(num2data(tempNode->defn + ic + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
                 (*line_count)++;
             }
 			/* check for the symbol in instruction hashtable */
             else if ((tempNode = fetchIntFromHashTab(op, instructionsSymbolsList)))
             {
-				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(tempNode->defn + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
+				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), baseConvertor(num2data(tempNode->defn + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
                 (*line_count)++;
             }
 			/* check for the symbol in externals hashtable */
             else if ((tempNode = fetchIntFromHashTab(op, extrnalCmdList)))
             {
-				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(0).data, BASE, base_result1, PAD), 'E');
-				fprintf(ext, "%s\t%s\n", op, to_base(*line_count + LINE_OFFSET, BASE, base_result, NO_PAD));
+				fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), baseConvertor(num2data(0).data, BASE, base_result1, PAD), 'E');
+				fprintf(ext, "%s\t%s\n", op, baseConvertor(*line_count + LINE_OFFSET, BASE, base_result, NO_PAD));
 				(*line_count)++;
             }
             else
@@ -606,7 +606,7 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
             }
             else
             {
-                fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(dataArrayList[sum].data, BASE, base_result1, PAD), 'A');
+                fprintf(obj, "%s\t%s\t%c\n", baseConvertor((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), baseConvertor(dataArrayList[sum].data, BASE, base_result1, PAD), 'A');
                 (*line_count)++;
             }
             break;
@@ -695,7 +695,7 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
     sprintf(file_name, "%s.ent", module_name);
     ent = fopen(file_name, "w");
 	/* print header */
-    fprintf(obj, "%s %s\n", to_base(ic, BASE, base_result, NO_PAD), to_base(dc, BASE, base_result1, NO_PAD));
+    fprintf(obj, "%s %s\n", baseConvertor(ic, BASE, base_result, NO_PAD), baseConvertor(dc, BASE, base_result1, NO_PAD));
     line_count++;
     for (i = 0; i < num_of_lines; i++) /* loop over all the code lines */
     {
@@ -708,7 +708,7 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
             for (j = 0; j < file[i].repeat; j++)
             {
 				/* write to file the actual instruction */
-                fprintf(obj, "%s\t%s\t%c\n",to_base(line_count + LINE_OFFSET, BASE, base_result, NO_PAD) , to_base(bline2data(*(file[i].instruction)).data, BASE, base_result1, PAD), 'A');
+                fprintf(obj, "%s\t%s\t%c\n",baseConvertor(line_count + LINE_OFFSET, BASE, base_result, NO_PAD) , baseConvertor(bline2data(*(file[i].instruction)).data, BASE, base_result1, PAD), 'A');
                 line_count++;
 				/* if there is source operand */
                 if (file[i].src_opr)
@@ -728,7 +728,7 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
 	/* write to obj file the data array */
     for (i = 0; i < dc; i++)
     {
-        fprintf(obj, "%s\t%s\n", to_base(line_count + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(dataArrayList[i].data, BASE, base_result1, PAD));
+        fprintf(obj, "%s\t%s\n", baseConvertor(line_count + LINE_OFFSET, BASE, base_result, NO_PAD), baseConvertor(dataArrayList[i].data, BASE, base_result1, PAD));
         line_count++;
     }
 	/* write to ent file the entries */
@@ -737,12 +737,12 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
 		/* try to find the address in the data hashtable */
         if ((tempNode = fetchIntFromHashTab(entryArrayList[i], dataSymbolsList)))
         {
-            fprintf(ent, "%s\t%s\n", entryArrayList[i], to_base(tempNode->defn + LINE_OFFSET + 1 + ic, BASE, base_result, NO_PAD));
+            fprintf(ent, "%s\t%s\n", entryArrayList[i], baseConvertor(tempNode->defn + LINE_OFFSET + 1 + ic, BASE, base_result, NO_PAD));
         }
 		/* try to find the address in the data hashtable */
         else if((tempNode = fetchIntFromHashTab(entryArrayList[i], instructionsSymbolsList)))
         {
-            fprintf(ent, "%s\t%s\n", entryArrayList[i], to_base(tempNode->defn + LINE_OFFSET + 1, BASE, base_result, NO_PAD));
+            fprintf(ent, "%s\t%s\n", entryArrayList[i], baseConvertor(tempNode->defn + LINE_OFFSET + 1, BASE, base_result, NO_PAD));
         }
         else
         {

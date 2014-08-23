@@ -14,7 +14,7 @@
  * @param str {String}
  * @return copied string {String}
  */
-char *strdup(const char *str)
+char *strCopy(const char *str)
 {
     int n = strlen(str) + 1;
     char *dup = malloc(n);
@@ -44,7 +44,7 @@ char *strdup(const char *str)
  * @param pad {int}
  * @return pointer to the char in the first of the converted number
  */
-char *to_base(int num, int base, char *result, int pad)
+char *baseConvertor(int num, int base, char *result, int pad)
 {
     int index = 0, i;
     char tmp[MAX_DIGIT + 1];

@@ -46,14 +46,14 @@ string_hash_node *registerStringToHashTab(char *name, char *defn, string_hash_no
     unsigned int hashval;
     if ((np = fetchStringFromHashTab(name, hashtab)) == NULL) { /* not found */
         np = (string_hash_node *) malloc(sizeof(*np));
-        if (np == NULL || (np->name = strdup(name)) == NULL)
+        if (np == NULL || (np->name = strCopy(name)) == NULL)
             return NULL;
         hashval = hash(name);
         np->next = hashtab[hashval];
         hashtab[hashval] = np;
     } else /* already there */
         free((void *) np->defn); /*free previous defn */
-    if ((np->defn = strdup(defn)) == NULL)
+    if ((np->defn = strCopy(defn)) == NULL)
         return NULL;
     return np;
 }
@@ -65,7 +65,7 @@ int_hash_node *registerIntToHashTab(char *name, int defn, int_hash_node *hashtab
     unsigned int hashval;
     if ((np = fetchIntFromHashTab(name, hashtab)) == NULL) { /* not found */
         np = (int_hash_node *) malloc(sizeof(*np));
-        if (np == NULL || (np->name = strdup(name)) == NULL)
+        if (np == NULL || (np->name = strCopy(name)) == NULL)
             return NULL;
         hashval = hash(name);
         np->next = hashtab[hashval];
