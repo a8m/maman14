@@ -3,7 +3,6 @@
 #include <stdio.h>/* DEBUG */
 #include <ctype.h>
 #include "utils.h"
-
 /* duplicate the given string in the argument, returnes the copied data */
 char *strdup(const char *str)
 {

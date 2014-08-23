@@ -313,27 +313,18 @@ void parse_instruction(code_line *c_line)
 	}
 	(c_line->line)++;
 
-	/* check for the dbl field*/
-	if (c_line->line[0]== 0)
-	{
-		/*dbl is 0*/
-		c_line->instruction->dbl = 0;
+    c_line->repeat = c_line->line[0] - '0';
 
-	}
-	/*dbl is 1*/
-	else if(c_line->line[0] == 1)
+   	/* check for repeat number, dbl bit */
+    if(c_line->repeat < 0 || c_line->repeat > 1)
 	{
-		/*dbl value is illegal*/
-		c_line->instruction->dbl = 1;
+		ERROR("Invalid command dbl value. Valid values are 0,1", (*c_line).line_number);
+		return;
 	}
 	else
 	{
-		ERROR("Ilegal value for dbl", (*c_line).line_number)
-		error_flag = 1;
-	}	
-	(c_line->line)++;
-
-    c_line->repeat = c_line->line[0] - '0';
+		c_line->instruction->dbl = c_line->repeat;
+	}
 	(c_line->line)++;
 	remove_pre_spaces(&(c_line->line));
     
@@ -385,7 +376,7 @@ void parse_instruction(code_line *c_line)
                 }
 		    default:
                 local_ic++;
-                if (strstr(c_line->line, "(@"))
+                if (strstr(c_line->line, "{!"))
                 {
                     local_ic++;
                     if (num_of_exp_operands == 1)
@@ -552,8 +543,8 @@ void parse_operand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, in
             }
             break;
         case 2: /* Elaborate addressing */
-			/* seek the ( char */
-            for (i = 0 ;op[i] != '('; i++);
+			/* seek the { char */
+            for (i = 0 ;op[i] != '{'; i++);
 			/* add there \0 char */
             op[i] = '\0';
 			/* check for the symbol in data hashtable */
@@ -580,19 +571,16 @@ void parse_operand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, in
                 ERROR("Can't find symbol in symbol table or in extern table", org_line_num)
                 error_flag = 1;
             }
-            op[i] = '('; /* put back ( char for the case this line will repeat */
-			/* seek for @ char */
-            for (;op[0] != '@'; op++);
+            op[i] = '{'; /* put back { char for the case this line will repeat */
+			/* seek for ! char */
+            for (;op[0] != '!'; op++) {};
             op++;
-			/* parse the index */
-            while(isdigit(op[0]))
-            {
-                sum *= 10;
-                sum += op[0] - '0';
-                op++;
-            }
+
+            sum *= ihn->defn;
+            for (;op[0] != '}'; op++) {};
+
 			/* make sure it ends with ) */
-            if (!(op[0] == ')'))
+            if (!(op[0] == '}'))
             {
                 ERROR("Wrong format for elaborate addressing", org_line_num)
                 error_flag = 1;
