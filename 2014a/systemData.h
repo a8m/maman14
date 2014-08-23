@@ -1,9 +1,13 @@
 /*
  * =========================================================================================
- * name        : maman_14/data.h
+ * name        : maman_14/systemData.h
  * author      : Ariel Mashraki, Osnat Izic
  * =========================================================================================
  */
+
+
+#ifndef SYSTEMDATA_H_
+#define SYSTEMDATA_H_
 
 #define EXIT -1
 #define FALSE 0
@@ -68,3 +72,5 @@ data_line num2data(int num);
 void registerInstructionLine(instructionLineObject *il);
 /* after allocating memory, the data need to be clear from garbage */
 void registerDataLine(data_line *dl);
+
+#endif

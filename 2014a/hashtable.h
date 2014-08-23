@@ -5,6 +5,9 @@
  * =========================================================================================
  */
 
+#ifndef HASHTABLE_H_
+#define HASHTABLE_H_
+
 typedef struct stringNodeList {
     struct stringNodeList *next; /* next node */
     char *name; /* name */
@@ -26,3 +29,5 @@ stringLinkedListNode *fetchStringFromHashTab(char *s, stringLinkedListNode *hash
 intLinkedListNode *registerIntToHashTab(char *name, int defn, intLinkedListNode *hashtab[]);
 
 intLinkedListNode *fetchIntFromHashTab(char *s, intLinkedListNode *hashtab[]);
+
+#endif

@@ -4,6 +4,10 @@
  * author      : Ariel Mashraki, Osnat Izic
  * =========================================================================================
  */
+
+#ifndef PARSE_H_
+#define PARSE_H_
+
 #define MAX_ARR_SIZE 1000
 #define LINE_OFFSET 99
 #define MAX_FILENAME 20
@@ -46,3 +50,6 @@ int firstPhase(codeLineObject *file, int numberOfLine);
  * @description Register the operations code to hash table
  */
 void registerOperations();
+
+#endif
+

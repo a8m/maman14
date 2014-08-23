@@ -1,11 +1,11 @@
 /*
  * =========================================================================================
- * name        : maman_14/data.c
+ * name        : maman_14/systemData.c
  * author      : Ariel Mashraki, Osnat Izic
  * =========================================================================================
  */
 
-#include "data.h"
+#include "systemData.h"
 
 /* 
  * Array of maskes requested by width 

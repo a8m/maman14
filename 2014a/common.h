@@ -5,6 +5,9 @@
  * =========================================================================================
  */
 
+#ifndef COMMON_H_
+#define COMMON_H_
+
 /* 
  * @description trim white space from the begining of the string, 
  * incrementing the original pointer to the first place that is not space 
@@ -41,3 +44,6 @@ char *baseConvertor(int num, int base, char *result, int pad);
  * max digit for the baseConvertor function 
  */
 #define MAX_DIGIT 8
+
+#endif
+

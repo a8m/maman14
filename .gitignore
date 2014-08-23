@@ -1,3 +1,6 @@
 .DS_Store
 compiler.o
 compiler.o.dSYM/
+*.obj
+sa*.ent
+sa*.ext

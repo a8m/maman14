@@ -9,9 +9,9 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include "data.h"
+#include "systemData.h"
 #include "parse.h"
-#include "hashtable.h"
+#include "hashTable.h"
  #include "common.h"
 
 /* array to store the data parsed from the code */
