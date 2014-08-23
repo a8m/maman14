@@ -5,25 +5,24 @@
  * =========================================================================================
  */
 
-typedef struct string_nlist { /* table entry: */
-    struct string_nlist *next; /* next entry in chain */
-    char *name; /* defined name */
-    char *defn; /* replacement text */
-} string_hash_node;
+typedef struct string_nlist {
+    struct string_nlist *next; /* next node */
+    char *name; /* name */
+    char *defn; /* replacement string */
+} stringLinkedListNode;
 
-typedef struct int_nlist { /* table entry: */
-    struct int_nlist *next; /* next entry in chain */
-    char *name; /* defined name */
-    int defn; /* replacement number */
-} int_hash_node;
+typedef struct int_nlist { 
+    struct int_nlist *next; /* next node */
+    char *name; /* name */
+    int defn; /* replacement int */
+} intLinkedListNode;
 
 #define HASHSIZE 200
 
-/* registerStringToHashTab: put (name, defn) in hashtab */
-string_hash_node *registerStringToHashTab(char *name, char *defn, string_hash_node *hashtab[]);
-/* fetchStringFromHashTab: look for s in hashtab */
-string_hash_node *fetchStringFromHashTab(char *s, string_hash_node *hashtab[]);
-/* registerIntToHashTab: put (name, defn) in hashtab */
-int_hash_node *registerIntToHashTab(char *name, int defn, int_hash_node *hashtab[]);
-/* fetchIntFromHashTab: look for s in hashtab */
-int_hash_node *fetchIntFromHashTab(char *s, int_hash_node *hashtab[]);
+stringLinkedListNode *registerStringToHashTab(char *name, char *defn, stringLinkedListNode *hashtab[]);
+
+stringLinkedListNode *fetchStringFromHashTab(char *s, stringLinkedListNode *hashtab[]);
+
+intLinkedListNode *registerIntToHashTab(char *name, int defn, intLinkedListNode *hashtab[]);
+
+intLinkedListNode *fetchIntFromHashTab(char *s, intLinkedListNode *hashtab[]);

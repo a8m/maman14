@@ -25,9 +25,9 @@ unsigned int hash(char *s)
  * @param table to looking for
  * @return NULL or Node
  */
- string_hash_node *fetchStringFromHashTab(char *s, string_hash_node *hashtab[])
+ stringLinkedListNode *fetchStringFromHashTab(char *s, stringLinkedListNode *hashtab[])
 {
-    string_hash_node *np;
+    stringLinkedListNode *np;
     for (np = hashtab[hash(s)]; np != NULL; np = np->next)
         if (strcmp(s, np->name) == 0)
             return np; /* found */
@@ -40,9 +40,9 @@ unsigned int hash(char *s)
  * @param table to looking for
  * @return NULL or Node
  */
-int_hash_node *fetchIntFromHashTab(char *s, int_hash_node *hashtab[])
+intLinkedListNode *fetchIntFromHashTab(char *s, intLinkedListNode *hashtab[])
 {
-    int_hash_node *np;
+    intLinkedListNode *np;
     for (np = hashtab[hash(s)]; np != NULL; np = np->next) {
         if (strcmp(s, np->name) == 0)
             return np; /* found node*/
@@ -56,12 +56,12 @@ int_hash_node *fetchIntFromHashTab(char *s, int_hash_node *hashtab[])
  * @param defn {char}
  * @param stringLinkedList
  */
-string_hash_node *registerStringToHashTab(char *name, char *defn, string_hash_node *hashtab[])
+stringLinkedListNode *registerStringToHashTab(char *name, char *defn, stringLinkedListNode *hashtab[])
 {
-    string_hash_node *np;
+    stringLinkedListNode *np;
     unsigned int hashval;
     if ((np = fetchStringFromHashTab(name, hashtab)) == NULL) { /* not found */
-        np = (string_hash_node *) malloc(sizeof(*np));
+        np = (stringLinkedListNode *) malloc(sizeof(*np));
         if (np == NULL || (np->name = strCopy(name)) == NULL)
             return NULL;
         hashval = hash(name);
@@ -80,12 +80,12 @@ string_hash_node *registerStringToHashTab(char *name, char *defn, string_hash_no
  * @param defn {int}
  * @param intLinkedList
  */
- int_hash_node *registerIntToHashTab(char *name, int defn, int_hash_node *hashtab[])
+ intLinkedListNode *registerIntToHashTab(char *name, int defn, intLinkedListNode *hashtab[])
 {
-    int_hash_node *np;
+    intLinkedListNode *np;
     unsigned int hashval;
     if ((np = fetchIntFromHashTab(name, hashtab)) == NULL) { /* not found */
-        np = (int_hash_node *) malloc(sizeof(*np));
+        np = (intLinkedListNode *) malloc(sizeof(*np));
         if (np == NULL || (np->name = strCopy(name)) == NULL)
             return NULL;
         hashval = hash(name);

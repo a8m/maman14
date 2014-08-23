@@ -17,15 +17,15 @@
 /* array to store the data parsed from the code */
 data_line dataArrayList[MAX_ARR_SIZE];
 /* linked list for the symbols addresses of data pointers */
-static int_hash_node *dataSymbolsList[HASHSIZE];
+static intLinkedListNode *dataSymbolsList[HASHSIZE];
 /* linked list for the symbols addresses of instructions pointers */
-static int_hash_node *instructionsSymbolsList[HASHSIZE];
+static intLinkedListNode *instructionsSymbolsList[HASHSIZE];
 /* linked list for the external commands */
-static int_hash_node *extrnalCmdList[HASHSIZE];
+static intLinkedListNode *extrnalCmdList[HASHSIZE];
 /* linked list for the opcode replacements */
-static int_hash_node *operationList[HASHSIZE];
+static intLinkedListNode *operationList[HASHSIZE];
 /* temporary node for lookuping in the linkde lists */
-int_hash_node *tempNode, *tempDynamicNode;
+intLinkedListNode *tempNode, *tempDynamicNode;
 /* array for entries */
 char *entryArrayList[MAX_ARR_SIZE];
 /* counters for entries end externals */
