@@ -19,11 +19,11 @@ data_line dataArrayList[MAX_ARR_SIZE];
 /* linked list for the symbols addresses of data pointers */
 static int_hash_node *dataSymbolsList[HASHSIZE];
 /* linked list for the symbols addresses of instructions pointers */
-static int_hash_node *inst_symtab[HASHSIZE];
+static int_hash_node *instructionsSymbolsList[HASHSIZE];
 /* linked list for the external commands */
-static int_hash_node *exttab[HASHSIZE];
+static int_hash_node *extrnalCmdList[HASHSIZE];
 /* linked list for the opcode replacements */
-static int_hash_node *optab[HASHSIZE];
+static int_hash_node *operationList[HASHSIZE];
 /* temporary node for lookuping in the linkde lists */
 int_hash_node *ihn;
 /* array for entries */
@@ -190,7 +190,7 @@ void parseExtern(code_line *c_line)
 		return;
 	}
 	/* add to the extern hashtable with value 0 */
-    registerIntToHashTab(c_line->line, '0', exttab);
+    registerIntToHashTab(c_line->line, '0', extrnalCmdList);
 	counterForExtern++;
 	c_line->line = strtok(NULL, " \t\n");
 	/* make sure there is no other words */
@@ -228,7 +228,7 @@ void parsingInstruction(code_line *c_line)
 	/* isolate the opcode */
 	c_line->line = strtok(c_line->line, "/");
 	/* find it in the opcode hashtable */
-	ihn = fetchIntFromHashTab(c_line->line, optab);
+	ihn = fetchIntFromHashTab(c_line->line, operationList);
 	/* if its not a valid opcode */
 	if (!ihn)
 	{
@@ -489,7 +489,7 @@ int firstPhase(code_line *file, int num_of_lines)
 		{
             if (symbol)
             {
-                ihn = registerIntToHashTab(symbol, ic, inst_symtab);
+                ihn = registerIntToHashTab(symbol, ic, instructionsSymbolsList);
             }
 			parsingInstruction(&file[i]);
 		}
@@ -533,14 +533,14 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
                 (*line_count)++;
 			}
 			/* check in the instruction hashtable */
-            else if ((ihn = fetchIntFromHashTab(op, inst_symtab)))
+            else if ((ihn = fetchIntFromHashTab(op, instructionsSymbolsList)))
             {
 				/* write the symbol address to the obj file */
 				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(ihn->defn + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
                 (*line_count)++;
             }
 			/* check in the externals hashtable */
-            else if ((ihn = fetchIntFromHashTab(op, exttab)))
+            else if ((ihn = fetchIntFromHashTab(op, extrnalCmdList)))
 			{
 				/* write 0 to the obj file */
 				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count)+ LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(0).data, BASE, base_result1, PAD), 'E');
@@ -566,13 +566,13 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
                 (*line_count)++;
             }
 			/* check for the symbol in instruction hashtable */
-            else if ((ihn = fetchIntFromHashTab(op, inst_symtab)))
+            else if ((ihn = fetchIntFromHashTab(op, instructionsSymbolsList)))
             {
 				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(ihn->defn + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
                 (*line_count)++;
             }
 			/* check for the symbol in externals hashtable */
-            else if ((ihn = fetchIntFromHashTab(op, exttab)))
+            else if ((ihn = fetchIntFromHashTab(op, extrnalCmdList)))
             {
 				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(0).data, BASE, base_result1, PAD), 'E');
 				fprintf(ext, "%s\t%s\n", op, to_base(*line_count + LINE_OFFSET, BASE, base_result, NO_PAD));
@@ -740,7 +740,7 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
             fprintf(ent, "%s\t%s\n", entryArrayList[i], to_base(ihn->defn + LINE_OFFSET + 1 + ic, BASE, base_result, NO_PAD));
         }
 		/* try to find the address in the data hashtable */
-        else if((ihn = fetchIntFromHashTab(entryArrayList[i], inst_symtab)))
+        else if((ihn = fetchIntFromHashTab(entryArrayList[i], instructionsSymbolsList)))
         {
             fprintf(ent, "%s\t%s\n", entryArrayList[i], to_base(ihn->defn + LINE_OFFSET + 1, BASE, base_result, NO_PAD));
         }
@@ -759,8 +759,8 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
 	for (i = 0; i < HASHSIZE; i++)
 	{
 		dataSymbolsList[i] = NULL;
-		inst_symtab[i] = NULL;
-		exttab[i] = NULL;
+		instructionsSymbolsList[i] = NULL;
+		extrnalCmdList[i] = NULL;
 	}
 	/* if there is an error, delete all the files */
     if (flagForError)
@@ -792,20 +792,20 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
  */
 void registerOperations()
 {
-    ihn = registerIntToHashTab("mov" , MOV, optab);
-    ihn = registerIntToHashTab("cmp" , CMP, optab);
-    ihn = registerIntToHashTab("add" , ADD, optab);
-    ihn = registerIntToHashTab("sub" , SUB, optab);
-    ihn = registerIntToHashTab("not" , NOT, optab);
-    ihn = registerIntToHashTab("clr" , CLR, optab);
-    ihn = registerIntToHashTab("lea" , LEA, optab);
-    ihn = registerIntToHashTab("inc" , INC, optab);
-    ihn = registerIntToHashTab("dec" , DEC, optab);
-    ihn = registerIntToHashTab("jmp" , JMP, optab);
-    ihn = registerIntToHashTab("bne" , BNE, optab);
-    ihn = registerIntToHashTab("red" , RED, optab);
-    ihn = registerIntToHashTab("prn" , PRN, optab);
-    ihn = registerIntToHashTab("jsr" , JSR, optab);
-    ihn = registerIntToHashTab("rts" , RTS, optab);
-    ihn = registerIntToHashTab("stop" , STOP, optab);
+    ihn = registerIntToHashTab("mov" , MOV, operationList);
+    ihn = registerIntToHashTab("cmp" , CMP, operationList);
+    ihn = registerIntToHashTab("add" , ADD, operationList);
+    ihn = registerIntToHashTab("sub" , SUB, operationList);
+    ihn = registerIntToHashTab("not" , NOT, operationList);
+    ihn = registerIntToHashTab("clr" , CLR, operationList);
+    ihn = registerIntToHashTab("lea" , LEA, operationList);
+    ihn = registerIntToHashTab("inc" , INC, operationList);
+    ihn = registerIntToHashTab("dec" , DEC, operationList);
+    ihn = registerIntToHashTab("jmp" , JMP, operationList);
+    ihn = registerIntToHashTab("bne" , BNE, operationList);
+    ihn = registerIntToHashTab("red" , RED, operationList);
+    ihn = registerIntToHashTab("prn" , PRN, operationList);
+    ihn = registerIntToHashTab("jsr" , JSR, operationList);
+    ihn = registerIntToHashTab("rts" , RTS, operationList);
+    ihn = registerIntToHashTab("stop" , STOP, operationList);
 }
