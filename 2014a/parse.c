@@ -15,9 +15,9 @@
  #include "common.h"
 
 /* array to store the data parsed from the code */
-data_line data_arr[MAX_ARR_SIZE];
+data_line dataArrayList[MAX_ARR_SIZE];
 /* linked list for the symbols addresses of data pointers */
-static int_hash_node *data_symtab[HASHSIZE];
+static int_hash_node *dataSymbolsList[HASHSIZE];
 /* linked list for the symbols addresses of instructions pointers */
 static int_hash_node *inst_symtab[HASHSIZE];
 /* linked list for the external commands */
@@ -95,7 +95,7 @@ void parseData(code_line *c_line)
                 (c_line->line)++;
             }
 			/* add the number to data arr */
-            data_arr[dc++] = num2data(sum * sign);
+            dataArrayList[dc++] = num2data(sum * sign);
         }
 		
 		trim(&((*c_line).line));
@@ -136,14 +136,14 @@ void parseString(code_line *c_line)
     while ((c_line->line[0] != '\"') && (c_line->line[0] != '\0'))
     {
 		/* add the new string to the array */
-        data_arr[dc++] = char2data(c_line->line[0]);
+        dataArrayList[dc++] = char2data(c_line->line[0]);
         (c_line->line)++;
     }
 
 	/* at end, make sure it ends with " */
     if (c_line->line[0] == '\"')
     {
-        data_arr[dc++] = char2data('\0');
+        dataArrayList[dc++] = char2data('\0');
     }
     else
     {
@@ -423,7 +423,7 @@ void parsingCmd(code_line *c_line, char *symbol)
 		/* if there is a symbol */
 		if (symbol)
 		{
-			ihn = registerIntToHashTab(symbol, dc, data_symtab);
+			ihn = registerIntToHashTab(symbol, dc, dataSymbolsList);
 		}
         c_line->line += (sizeof(".string") - 1);
 		/* use the auxilary function to extract the string */
@@ -434,7 +434,7 @@ void parsingCmd(code_line *c_line, char *symbol)
 	{
 		if (symbol)
 		{
-			ihn = registerIntToHashTab(symbol, dc, data_symtab);
+			ihn = registerIntToHashTab(symbol, dc, dataSymbolsList);
 		}
         c_line->line += (sizeof(".data") - 1);
 		/* use the auxilary function to extract the data */
@@ -526,7 +526,7 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 			break;
 		case 1: /* its symbol */
 			/* check in the data hashtable */
-			if ((ihn = fetchIntFromHashTab(op, data_symtab)))
+			if ((ihn = fetchIntFromHashTab(op, dataSymbolsList)))
 			{
 				/* write the symbol address to the obj file */
 				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(ihn->defn + ic + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
@@ -560,7 +560,7 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
 			/* add there \0 char */
             op[i] = '\0';
 			/* check for the symbol in data hashtable */
-            if ((ihn = fetchIntFromHashTab(op, data_symtab)))
+            if ((ihn = fetchIntFromHashTab(op, dataSymbolsList)))
             {
 				fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(num2data(ihn->defn + ic + LINE_OFFSET + 1).data, BASE, base_result1, PAD), 'R');
                 (*line_count)++;
@@ -606,7 +606,7 @@ void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, i
             }
             else
             {
-                fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(data_arr[sum].data, BASE, base_result1, PAD), 'A');
+                fprintf(obj, "%s\t%s\t%c\n", to_base((*line_count) + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(dataArrayList[sum].data, BASE, base_result1, PAD), 'A');
                 (*line_count)++;
             }
             break;
@@ -728,14 +728,14 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
 	/* write to obj file the data array */
     for (i = 0; i < dc; i++)
     {
-        fprintf(obj, "%s\t%s\n", to_base(line_count + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(data_arr[i].data, BASE, base_result1, PAD));
+        fprintf(obj, "%s\t%s\n", to_base(line_count + LINE_OFFSET, BASE, base_result, NO_PAD), to_base(dataArrayList[i].data, BASE, base_result1, PAD));
         line_count++;
     }
 	/* write to ent file the entries */
     for (i = 0; entryArrayList[i]; i++)
     {
 		/* try to find the address in the data hashtable */
-        if ((ihn = fetchIntFromHashTab(entryArrayList[i], data_symtab)))
+        if ((ihn = fetchIntFromHashTab(entryArrayList[i], dataSymbolsList)))
         {
             fprintf(ent, "%s\t%s\n", entryArrayList[i], to_base(ihn->defn + LINE_OFFSET + 1 + ic, BASE, base_result, NO_PAD));
         }
@@ -758,7 +758,7 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
 	/* clear the hashtable for the next file */
 	for (i = 0; i < HASHSIZE; i++)
 	{
-		data_symtab[i] = NULL;
+		dataSymbolsList[i] = NULL;
 		inst_symtab[i] = NULL;
 		exttab[i] = NULL;
 	}
