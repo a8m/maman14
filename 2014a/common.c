@@ -46,25 +46,25 @@ char *strdup(const char *str)
  */
 char *to_base(int num, int base, char *result, int pad)
 {
-	int index = 0, i;
-	char tmp[MAX_DIGIT + 1];
-	for (i = 0; i < MAX_DIGIT; i++) /* reset all the cells */
-	{
-		result[i] = '0';
-		tmp[i] = '0';
-	}
+    int index = 0, i;
+    char tmp[MAX_DIGIT + 1];
+    for (i = 0; i < MAX_DIGIT; i++) /* reset all the cells */
+    {
+        result[i] = '0';
+        tmp[i] = '0';
+    }
 
-	while (num != 0)
-	{
-		tmp[index] = (num % base) + '0';
-		num /= base;
-		index++;
-	}
+    while (num != 0)
+    {
+        tmp[index] = (num % base) + '0';
+        num /= base;
+        index++;
+    }
 
-	for (i = 0; i < MAX_DIGIT; i++)
-	{
-		result[i] = tmp[MAX_DIGIT - 1 - i];
-	}
+    for (i = 0; i < MAX_DIGIT; i++)
+    {
+        result[i] = tmp[MAX_DIGIT - 1 - i];
+    }
     result[i] = '\0';
 
     if (pad)

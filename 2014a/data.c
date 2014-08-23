@@ -57,9 +57,9 @@ data_line num2data(int num)
     }
     else
     {
-		tmp.data = (num * -1) & bit_mask_19;
-		tmp.data = ~(tmp.data);
-		(tmp.data)++;
+        tmp.data = (num * -1) & bit_mask_19;
+        tmp.data = ~(tmp.data);
+        (tmp.data)++;
     }
 
     return tmp;

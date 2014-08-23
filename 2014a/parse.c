@@ -36,7 +36,7 @@ int i, ic, dc;
 char error_flag = 0, extern_flag = 0, entry_flag = 0;
 
 /* this function is checking if there is a symbol. if yes, its returning a pointer to it, if not, returns null */
-char *get_symbol(code_line *c_line)
+char *fetchSymbol(code_line *c_line)
 {
     char *tmp = (c_line->line);
 	/* while its not end of line */
@@ -62,7 +62,7 @@ char *get_symbol(code_line *c_line)
 }
 
 /* this function extract the data from a data command */
-void extract_data(code_line *c_line)
+void parseData(code_line *c_line)
 {
     int sign;
     int sum;
@@ -120,7 +120,7 @@ void extract_data(code_line *c_line)
 }
 
 /* this function extract the string from a string command */
-void extract_string(code_line *c_line)
+void parseString(code_line *c_line)
 {
     trim(&(c_line->line));
 	/* make sure its starts with " */
@@ -155,7 +155,7 @@ void extract_string(code_line *c_line)
 }
 
 /* this function extract the entry from a entry command */
-void extract_entry(code_line *c_line)
+void parseEntry(code_line *c_line)
 {
 	/* skip on tabs and spaces */
 	c_line->line = strtok(c_line->line, " \t\n");
@@ -178,7 +178,7 @@ void extract_entry(code_line *c_line)
 }
 
 /* this function extract the entry from a entry command */
-void extract_extern(code_line *c_line)
+void parseExtern(code_line *c_line)
 {
 	/* skip on tabs and spaces */
 	c_line->line = strtok(c_line->line, " \t\n");
@@ -202,7 +202,7 @@ void extract_extern(code_line *c_line)
 }
 
 /* this functions returnes the number of operands expected per opcode */
-char count_exp_operands(char *s)
+char checkExpOperands(char *s)
 {
 	if (strcmp(s, "rts") == 0 || strcmp(s, "stop") == 0)
 	{
@@ -220,7 +220,7 @@ char count_exp_operands(char *s)
 }
 
 /* this function parsing the instruction given in the line */
-void parse_instruction(code_line *c_line)
+void parsingInstruction(code_line *c_line)
 {
 	/* count how many instruction lines this line using, including repeats */
     int local_ic = 0;
@@ -243,7 +243,7 @@ void parse_instruction(code_line *c_line)
 		return;
 	}
 	/* use the auxilary function to count the expected operands */
-	num_of_exp_operands = count_exp_operands(c_line->line);
+	num_of_exp_operands = checkExpOperands(c_line->line);
 	c_line->instruction = (instruction_line *) malloc(sizeof(instruction_line) * 8);
 	/* clear the instruction line */
     init_instruction_line(c_line->instruction);
@@ -415,7 +415,7 @@ void parse_instruction(code_line *c_line)
 }
 
 /* this function parsing the commands line (string, data, extern and entry) */
-void parse_command(code_line *c_line, char *symbol)
+void parsingCmd(code_line *c_line, char *symbol)
 {
 	/* if string */
 	if (strncmp(c_line->line, ".string", sizeof(".string") - 1) == 0)
@@ -427,7 +427,7 @@ void parse_command(code_line *c_line, char *symbol)
 		}
         c_line->line += (sizeof(".string") - 1);
 		/* use the auxilary function to extract the string */
-		extract_string(c_line);
+		parseString(c_line);
 	}
 	/* if data */
 	else if (strncmp((*c_line).line, ".data", sizeof(".data") - 1) == 0)
@@ -438,21 +438,21 @@ void parse_command(code_line *c_line, char *symbol)
 		}
         c_line->line += (sizeof(".data") - 1);
 		/* use the auxilary function to extract the data */
-		extract_data(c_line);
+		parseData(c_line);
 	}
 	/* if entry */
 	else if (strncmp(c_line->line, ".entry", sizeof(".entry") - 1) == 0)
 	{
         c_line->line += (sizeof(".entry") - 1);
 		/* use the auxilary function */
-		extract_entry(c_line);
+		parseEntry(c_line);
 	}
 	/* if extern */
 	else if (strncmp(c_line->line, ".extern", sizeof(".extern") - 1) == 0)
 	{
         c_line->line += (sizeof(".extern") - 1);
 		/* use the auxilary function */
-		extract_extern(c_line);
+		parseExtern(c_line);
 	}
 	else
 	{
@@ -479,11 +479,11 @@ int firstPhase(code_line *file, int num_of_lines)
 
     for (i = 0; i < num_of_lines; i++) /* loop over all the code lines */
     {
-        symbol = get_symbol(file + i);
+        symbol = fetchSymbol(file + i);
         trim(&(file[i].line));
 		if (file[i].line[0] == '.')
 		{
-			parse_command(&file[i], symbol);
+			parsingCmd(&file[i], symbol);
 		}
 		else
 		{
@@ -491,7 +491,7 @@ int firstPhase(code_line *file, int num_of_lines)
             {
                 ihn = int_install(symbol, ic, inst_symtab);
             }
-			parse_instruction(&file[i]);
+			parsingInstruction(&file[i]);
 		}
     }
 
@@ -499,7 +499,7 @@ int firstPhase(code_line *file, int num_of_lines)
 }
 
 /* this function is for the second parsing, parsing each operand */
-void parse_operand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, int org_line_num)
+void parsingOperand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, int org_line_num)
 {
 	/* 2 temporary arrays to get the base 6 results */
 	char base_result[MAX_DIGIT + 1], base_result1[MAX_DIGIT + 1];
@@ -615,7 +615,7 @@ void parse_operand(char *op, int addr, FILE *obj, FILE *ext, int *line_count, in
 }
 
 /* this function checks if the given addressing is valid */
-void check_addressing(instruction_line *inst_line, int line_number)
+void checkForAdress(instruction_line *inst_line, int line_number)
 {
     switch(inst_line->opcode)
     {
@@ -703,7 +703,7 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
         if (!file[i].done)
         {
 			/* check if the addressing is valid */
-            check_addressing(file[i].instruction, file[i].line_number);
+            checkForAdress(file[i].instruction, file[i].line_number);
 			/* parse the operands * repeat times */
             for (j = 0; j < file[i].repeat; j++)
             {
@@ -714,13 +714,13 @@ int secondPhase(code_line *file, int num_of_lines, char *module_name)
                 if (file[i].src_opr)
                 {
 					/* use the auxilary function to parse the operand */
-					parse_operand(file[i].src_opr, file[i].instruction->src_addr, obj, ext, &line_count, file[i].line_number);
+					parsingOperand(file[i].src_opr, file[i].instruction->src_addr, obj, ext, &line_count, file[i].line_number);
                 }
 				/* if there is source operand */
                 if (file[i].dest_opr)
                 {
 					/* use the auxilary function to parse the operand */
-					parse_operand(file[i].dest_opr, file[i].instruction->dest_addr, obj, ext, &line_count, file[i].line_number);
+					parsingOperand(file[i].dest_opr, file[i].instruction->dest_addr, obj, ext, &line_count, file[i].line_number);
                 }
             }
         }
