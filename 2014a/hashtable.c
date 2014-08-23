@@ -19,8 +19,13 @@ unsigned int hash(char *s)
     return hashval % HASHSIZE;
 }
 
-/* fetchStringFromHashTab: look for s in hashtab */
-string_hash_node *fetchStringFromHashTab(char *s, string_hash_node *hashtab[])
+/* 
+ * @description look for node in a stringlinkedList 
+ * @param s {String} name of node
+ * @param table to looking for
+ * @return NULL or Node
+ */
+ string_hash_node *fetchStringFromHashTab(char *s, string_hash_node *hashtab[])
 {
     string_hash_node *np;
     for (np = hashtab[hash(s)]; np != NULL; np = np->next)
@@ -29,7 +34,12 @@ string_hash_node *fetchStringFromHashTab(char *s, string_hash_node *hashtab[])
     return NULL; /* not found */
 }
 
-/* fetchIntFromHashTab: look for s in hashtab */
+/* 
+ * @description look for node in a intlinkedList 
+ * @param s {String} name of node
+ * @param table to looking for
+ * @return NULL or Node
+ */
 int_hash_node *fetchIntFromHashTab(char *s, int_hash_node *hashtab[])
 {
     int_hash_node *np;
@@ -40,7 +50,12 @@ int_hash_node *fetchIntFromHashTab(char *s, int_hash_node *hashtab[])
     return NULL; /* not found node*/
 }
 
-/* registerStringToHashTab: put (name, defn) in hashtab */
+/* 
+ * @description insert node in stringlinkedList(hashTable)
+ * @param name {String}
+ * @param defn {char}
+ * @param stringLinkedList
+ */
 string_hash_node *registerStringToHashTab(char *name, char *defn, string_hash_node *hashtab[])
 {
     string_hash_node *np;
@@ -59,8 +74,13 @@ string_hash_node *registerStringToHashTab(char *name, char *defn, string_hash_no
     return np;
 }
 
-/* registerIntToHashTab: put (name, defn) in hashtab */
-int_hash_node *registerIntToHashTab(char *name, int defn, int_hash_node *hashtab[])
+/* 
+ * @description insert node in intlinkedList(hashTable)
+ * @param name {String}
+ * @param defn {int}
+ * @param intLinkedList
+ */
+ int_hash_node *registerIntToHashTab(char *name, int defn, int_hash_node *hashtab[])
 {
     int_hash_node *np;
     unsigned int hashval;

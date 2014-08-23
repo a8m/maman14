@@ -7,16 +7,19 @@
 
 #include "data.h"
 
-/* auxilary array of maskes requested by width */
+/* 
+ * Array of maskes requested by width 
+ */
 unsigned char mask_by_width[] = {0x0, 0x1, 0x3, 0x7, 0xF, 0x1F, 0x3F, 0x7F, 0xFF};
 
-/* after allocating memory, the data need to be clear from garbage */
 void registerDataLine(data_line *dl)
 {
     dl->data = 0;
 }
 
-/* this function returning data_line containing the char in the argument */
+/*
+ * @decription returning data_line containing the char in the argument 
+ */
 data_line char2data(char ch)
 {
     data_line tmp;
@@ -25,7 +28,9 @@ data_line char2data(char ch)
     return tmp;
 }
 
-/* this function returning data_line containing the (boolean) instruction line in the argument */
+/* 
+ * @description returning data_line containing the (boolean) instruction line in the argument 
+ */
 data_line bline2data(instruction_line bl)
 {
     data_line tmp;
@@ -44,7 +49,9 @@ data_line bline2data(instruction_line bl)
     return tmp;
 }
 
-/* this function returning data_line containing the int in the argument with the sign bit */
+/* 
+ * @description returning data_line containing the int in the argument with the sign bit 
+ */
 data_line num2data(int num)
 {
     unsigned int bit_mask_19 = 0x7FFFF;
@@ -65,7 +72,9 @@ data_line num2data(int num)
     return tmp;
 }
 
-/* this function clearing the values of an instruction line */
+/* 
+ * @description clearing the values of an instruction line 
+ */
 void registerInstructionLine(instruction_line *il)
 {
     il->comb = 0;
