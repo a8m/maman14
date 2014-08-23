@@ -1,4 +1,4 @@
-all:    assembler.o
+all:    compiler.o
 
-assembler.o : assembler.c
-	        gcc -ansi -pedantic -Wall -g *.c -o assembler.o -lm
+compiler.o : compiler.c
+	        gcc -ansi -pedantic -Wall -g *.c -o compiler.o -lm

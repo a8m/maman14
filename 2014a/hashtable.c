@@ -1,7 +1,14 @@
+/*
+ * =========================================================================================
+ * name        : maman_14/hashtable.c
+ * author      : Ariel Mashraki, Osnat Izic
+ * =========================================================================================
+ */
+ 
 #include "hashtable.h"
 #include <stdlib.h>
 #include <string.h>
-#include "utils.h"
+#include "common.h"
 
 /* hash: form hash value for string s */
 unsigned int hash(char *s)

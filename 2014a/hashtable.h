@@ -1,3 +1,10 @@
+/*
+ * =========================================================================================
+ * name        : maman_14/hashtable.h
+ * author      : Ariel Mashraki, Osnat Izic
+ * =========================================================================================
+ */
+
 typedef struct string_nlist { /* table entry: */
     struct string_nlist *next; /* next entry in chain */
     char *name; /* defined name */

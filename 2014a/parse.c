@@ -1,11 +1,18 @@
+/*
+ * =========================================================================================
+ * name        : maman_14/parse.c
+ * author      : Ariel Mashraki, Osnat Izic
+ * =========================================================================================
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include "utils.h"
 #include "data.h"
 #include "parse.h"
 #include "hashtable.h"
+ #include "common.h"
 
 /* array to store the data parsed from the code */
 data_line data_arr[MAX_ARR_SIZE];
@@ -64,7 +71,7 @@ void extract_data(code_line *c_line)
     while ((*c_line).line[0] != '\n')
     {
 		/* remove the spaces from the begining of the line */
-		remove_pre_spaces(&((*c_line).line));
+		trim(&((*c_line).line));
 		/* check sign */
         if (c_line->line[0] == '-')
         {
@@ -91,7 +98,7 @@ void extract_data(code_line *c_line)
             data_arr[dc++] = num2data(sum * sign);
         }
 		
-		remove_pre_spaces(&((*c_line).line));
+		trim(&((*c_line).line));
 		/* if there is more numbers */
         if (c_line->line[0] == ',')
 		{
@@ -115,7 +122,7 @@ void extract_data(code_line *c_line)
 /* this function extract the string from a string command */
 void extract_string(code_line *c_line)
 {
-    remove_pre_spaces(&(c_line->line));
+    trim(&(c_line->line));
 	/* make sure its starts with " */
     if (!(c_line->line[0] == '\"'))
     {
@@ -326,7 +333,7 @@ void parse_instruction(code_line *c_line)
 		c_line->instruction->dbl = c_line->repeat;
 	}
 	(c_line->line)++;
-	remove_pre_spaces(&(c_line->line));
+	trim(&(c_line->line));
     
 	 /*read the expected number of operands */
     c_line->line = strtok(c_line->line, " \t,\n");
@@ -468,7 +475,7 @@ int first_parsing(code_line *file, int num_of_lines)
     for (i = 0; i < num_of_lines; i++) /* loop over all the code lines */
     {
         symbol = get_symbol(file + i);
-        remove_pre_spaces(&(file[i].line));
+        trim(&(file[i].line));
 		if (file[i].line[0] == '.')
 		{
 			parse_command(&file[i], symbol);
