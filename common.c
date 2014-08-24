@@ -10,6 +10,17 @@
 #include <ctype.h>
 #include "common.h"
 /* 
+ * @description trim white space from the begining of the string, 
+ * incrementing the original pointer to the first place that is not space 
+ * @param str {String}
+ */
+ void trim(char **str)
+{
+    while(isspace(**str) && (**str != '\n'))
+        (*str)++;
+}
+
+/* 
  * @description copy the given string in the argument;
  * @param str {String}
  * @return copied string {String}
@@ -23,17 +34,6 @@ char *strCopy(const char *str)
         strcpy(dup, str);
     }
     return dup;
-}
-
-/* 
- * @description trim white space from the begining of the string, 
- * incrementing the original pointer to the first place that is not space 
- * @param str {String}
- */
- void trim(char **str)
-{
-    while(isspace(**str) && (**str != '\n'))
-        (*str)++;
 }
 
 /* 

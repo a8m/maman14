@@ -19,4 +19,14 @@
 
 int startInterpretation(int argc, char **filesList);
 
+
+ /* 
+ * @descipriton 
+ * MACRO - SYSTEM_DONE printing, print succesing message for each file
+ * @param msg {String}
+ * @example[usage]
+ * SYSTEM_DONE(FILE_NAME)
+ */
+#define SYSTEM_DONE(FILE_NAME) printf("\nSYSTEM: Interpretation Status for %s - DONE.\n", FILE_NAME);
+
 #endif

@@ -22,6 +22,7 @@ void registerDataLine(data_line *dl)
 
 /*
  * @decription returning data_line containing the char in the argument 
+  @param ch {char}
  */
 data_line char2data(char ch)
 {
@@ -32,28 +33,8 @@ data_line char2data(char ch)
 }
 
 /* 
- * @description returning data_line containing the (boolean) instruction line in the argument 
- */
-data_line bline2data(instructionLineObject bl)
-{
-    data_line tmp;
-    registerDataLine(&tmp);
-
-    tmp.data |= (maskWidthArray[COMB_WIDTH]   << COMB_OFFSET)   & (bl.comb << COMB_OFFSET);
-    tmp.data |= (maskWidthArray[DREG_WIDTH]   << DREG_OFFSET)   & (bl.destReg << DREG_OFFSET);
-    tmp.data |= (maskWidthArray[DADDR_WIDTH]  << DADDR_OFFSET)  & (bl.destAddr << DADDR_OFFSET);
-    tmp.data |= (maskWidthArray[SREG_WIDTH]   << SREG_OFFSET)   & (bl.srcReg << SREG_OFFSET);
-    tmp.data |= (maskWidthArray[SADDR_WIDTH]  << SADDR_OFFSET)  & (bl.srcAddr << SADDR_OFFSET);
-    tmp.data |= (maskWidthArray[OPCODE_WIDTH] << OPCODE_OFFSET) & (bl.opcode << OPCODE_OFFSET);
-    tmp.data |= (maskWidthArray[TYPE_WIDTH]   << TYPE_OFFSET)   & (bl.type << TYPE_OFFSET);
-    tmp.data |= (maskWidthArray[DBL_WIDTH]    << DBL_OFFSET)    & (bl.dbl << DBL_OFFSET);
-    tmp.data |= (maskWidthArray[RSVD_WIDTH]   << RSVD_OFFSET)   & (bl.rsvd << RSVD_OFFSET);
-
-    return tmp;
-}
-
-/* 
  * @description returning data_line containing the int in the argument with the sign bit 
+ * @param num {int}
  */
 data_line num2data(int num)
 {
@@ -77,16 +58,38 @@ data_line num2data(int num)
 
 /* 
  * @description clearing the values of an instruction line 
+ * @param instLine {instructionLineObject}
  */
-void registerInstructionLine(instructionLineObject *il)
+void registerInstructionLine(instructionLineObject *instLine)
 {
-    il->comb = 0;
-    il->destReg = 0;
-    il->destAddr = 0;
-    il->srcReg = 0;
-    il->srcAddr = 0;
-    il->opcode = 0;
-    il->type = 0;
-    il->dbl = 0;
-    il->rsvd = 0; 
+    instLine->comb = 0;
+    instLine->destReg = 0;
+    instLine->destAddr = 0;
+    instLine->srcReg = 0;
+    instLine->srcAddr = 0;
+    instLine->opcode = 0;
+    instLine->type = 0;
+    instLine->dbl = 0;
+    instLine->rsvd = 0; 
+}
+
+/* 
+ * @description returning data_line containing the (boolean) instruction line in the argument 
+ */
+data_line bline2data(instructionLineObject bl)
+{
+    data_line tmp;
+    registerDataLine(&tmp);
+
+    tmp.data |= (maskWidthArray[COMB_WIDTH]   << COMB_OFFSET)   & (bl.comb << COMB_OFFSET);
+    tmp.data |= (maskWidthArray[DREG_WIDTH]   << DREG_OFFSET)   & (bl.destReg << DREG_OFFSET);
+    tmp.data |= (maskWidthArray[DADDR_WIDTH]  << DADDR_OFFSET)  & (bl.destAddr << DADDR_OFFSET);
+    tmp.data |= (maskWidthArray[SREG_WIDTH]   << SREG_OFFSET)   & (bl.srcReg << SREG_OFFSET);
+    tmp.data |= (maskWidthArray[SADDR_WIDTH]  << SADDR_OFFSET)  & (bl.srcAddr << SADDR_OFFSET);
+    tmp.data |= (maskWidthArray[OPCODE_WIDTH] << OPCODE_OFFSET) & (bl.opcode << OPCODE_OFFSET);
+    tmp.data |= (maskWidthArray[TYPE_WIDTH]   << TYPE_OFFSET)   & (bl.type << TYPE_OFFSET);
+    tmp.data |= (maskWidthArray[DBL_WIDTH]    << DBL_OFFSET)    & (bl.dbl << DBL_OFFSET);
+    tmp.data |= (maskWidthArray[RSVD_WIDTH]   << RSVD_OFFSET)   & (bl.rsvd << RSVD_OFFSET);
+
+    return tmp;
 }

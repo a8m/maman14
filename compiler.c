@@ -68,14 +68,16 @@ int startInterpretation(int argc, char **filesList)
         /* free the extra line */
         free(numOfLines[count].line);
 
-        /* call the firstPhase function from parse.c */
+        /* call the firstPhase */
         firstPhase(numOfLines, count);
-        /* call the secondPhase function from parse.c */
+        /* call the secondPhase */
         secondPhase(numOfLines, count, filesList[i]);
-        /* free the memory of the file lines */
+        /* relocation file lines */
         free(numOfLines);
         /* close the file */
         fclose(fp);
+
+        SYSTEM_DONE(fileName);
 
     }
     return FALSE;
